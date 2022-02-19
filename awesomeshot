@@ -1,2 +1,233 @@
 #!/usr/bin/env bash
+#
+# Awesomeshot: A command-line screenshot tool written in bash 5.1.16+.
+# https://github.com/mayTermux/awesomeshot
+#
+# Copyright (c) 2021 - 2022 xShin
 
+version=1.0.0
+
+XDG_CONFIG_HOME=${XDG_CONFIG_HOME:-${HOME}/.config}
+config_file="${XDG_CONFIG_HOME}/awesomeshot/awesomeshot.conf"
+
+LC_ALL=C
+LANG=C
+
+# Color
+COLOR_DEFAULT="\e[39m"
+COLOR_DANGER="\e[91m"
+COLOR_WARNING="\e[93m"
+COLOR_SUCCESS="\e[92m"
+COLOR_SKY="\e[34m"
+
+# Awesomeshot default config
+read -rd '' config <<'EOF'
+# Make sure when your phone screenshot the result file image
+# PATH is same with this variable. Default my phone result file
+# image PATH on "/sdcard/Pictures/Screenshots". If not same,
+# you can edit this variable value
+screenshot_result_path="/sdcard/Pictures/Screenshots"
+
+# PATH backup original photo or screenshot
+path_backup="${HOME}/.config/awesomeshot/backup"
+
+# Border radius
+# Change this value to "" or whatever for disable convert
+convert_rounded="yes"
+
+border_radius=15
+
+# Change this value to "" or whatever for disable convert
+convert_border="yes"
+
+# Change this value to "none" for transparent background
+border_color="#F8F9FA"
+
+border_size=70
+
+# Shadow
+# Change this value to "" or whatever for disable convert
+convert_shadow="yes"
+
+shadow_color="#000000"
+shadow_size="75x30+0+30"
+
+# Footer
+# Change this value to "" or whatever for disable convert
+convert_footer="yes"
+
+footer_text=" Shot by Awesomeshot"
+footer_position="South"
+footer_xy="+0+30"
+footer_font="JetBrains-Mono-Medium-Nerd-Font-Complete"
+footer_font_size=20
+footer_foreground="#000000"
+footer_background="none"
+
+# Open Image when convert done
+open_image="yes"
+EOF
+
+# init file_name
+file_name=""
+
+function getUserConfig() {
+
+  if [ -f "${config_file}" ]; then
+
+    source "${config_file}"
+
+  elif [ ! -f "${config_file}" ]; then
+
+    mkdir -p "${XDG_CONFIG_HOME}/awesomeshot/"
+    printf '%s\n' "$config" > "$config_file"
+    source "${config_file}"
+
+  fi
+
+}
+
+function header() {
+  printf "\n\n                      %-18s\n\n" "AWESOMESHOT v${version}"
+}
+
+function title() {
+  printf "\n\b\r\033[2K***${1}\n" | sed 's/*/ /g'
+}
+
+function subtitle() {
+  printf "%-45s" "*******${1}" | sed 's/ /./g' | sed 's/*/ /g'
+}
+
+function check() {
+  if [[ $? -eq 0 && ${PIPESTATUS[0]} -eq 0 ]]; then
+
+    echo -e " ${COLOR_SUCCESS}[SUCCESS]${COLOR_DEFAULT} "
+
+  else
+
+    echo -e " ${COLOR_DANGER}[FAILED]${COLOR_DEFAULT} "
+
+  fi
+}
+
+function autoRun() {
+  
+  count=1
+  header
+  title "${COLOR_SKY}[?] WAITING TO TAKE SCREENSHOT${COLOR_DEFAULT}             [${COLOR_WARNING}${count}${COLOR_DEFAULT}]"
+
+  inotifywait -m -e create ${screenshot_result_path} 2> /dev/null | \
+    while read get_file_name_result; do
+      subtitle "[+]*Execute*Program*"
+      get_file_name=$(echo -e "${get_file_name_result}" | awk '{print $3}')
+      file_name+="${screenshot_result_path}/${get_file_name}"
+
+      echo -e ""
+
+      title "${COLOR_SKY}[+] BACKUP${COLOR_DEFAULT}"
+      backupOriginalPhoto "${get_file_name}"
+
+      title "${COLOR_SKY}[+] CONVERTING${COLOR_DEFAULT}"
+      
+      if [ "${convert_rounded}" == "yes" ]; then
+        convertRounded
+      fi
+
+      if [ "${convert_shadow}" == "yes" ]; then
+        convertShadow
+      fi
+
+      if [ "${convert_border}" == "yes" ]; then
+        convertBorder
+      fi
+      
+      if [ "${convert_footer}" == "yes" ]; then
+        convertFooter
+      fi
+
+      if [ "${open_image}" == "yes" ]; then
+        termux-open "${file_name}"
+      fi
+
+      count=$(( ${count} + 1 ))
+
+      title "${COLOR_SKY}[?] WAITING TO TAKE SCREENSHOT${COLOR_DEFAULT}             [${COLOR_WARNING}${count}${COLOR_DEFAULT}]"
+      unset file_name
+    done
+}
+
+function backupOriginalPhoto() {
+  change_filename_backup=$(echo $1 | sed 's/.png/_backup.png/g')
+
+  if [ ! -d ${path_backup} ]; then
+    mkdir -p ${path_backup}
+  fi
+
+  cp ${file_name} ${path_backup}/${change_filename_backup}
+
+  if [ -f ${path_backup}/${change_filename_backup} ]; then
+
+    subtitle "[+]*Backup*File*"
+    check
+
+  else
+
+    subtitle "[+]*Backup*File*"
+    check
+
+  fi
+}
+
+function convertRounded() {
+  subtitle "[+]*Set*Rounded*Corner*"
+
+  convert $file_name \
+    \( +clone -alpha extract -draw \
+      "fill black polygon 0,0,0,${border_radius} ${border_radius},0 fill white circle ${border_radius},${border_radius},${border_radius},0" \
+      \( +clone -flip \) -compose Multiply -composite \
+      \( +clone -flop \) -compose Multiply -composite \
+    \) \
+    -alpha off -compose CopyOpacity -composite $file_name
+  check
+}
+
+function convertShadow() {
+  subtitle "[+]*Set*Image*Shadow*"
+
+  convert $file_name \
+    \( \
+      +clone \
+      -background "${shadow_color}" \
+      -shadow ${shadow_size} \
+    \) \
+    +swap \
+    -background none \
+    -layers merge \
+    +repage $file_name
+  check
+}
+
+function convertBorder() {
+  subtitle "[+]*Set*Image*Border*Color*"
+
+  convert $file_name -bordercolor "${border_color}" -border ${border_size} $file_name
+  check
+}
+
+function convertFooter() {
+  subtitle "[+]*Set*Image*Footer"
+  echo -n "${footer_text}" |
+  convert $file_name \
+    -gravity ${footer_position} \
+    -pointsize ${footer_font_size} \
+    -fill ${footer_foreground} \
+    -undercolor ${footer_background} \
+    -font ${footer_font} \
+    -annotate ${footer_xy} \
+    @- $file_name
+  check
+}
+
+getUserConfig
+autoRun
