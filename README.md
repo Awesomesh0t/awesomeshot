@@ -1,4 +1,4 @@
-<h1 align="center">myTermux</h1>
+<h1 align="center">Awesomeshot</h1>
 <p align="center">A command-line screenshot tool written in bash 5.1.16+</p>
 
 <p align="center">
