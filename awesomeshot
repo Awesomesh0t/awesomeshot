@@ -64,6 +64,9 @@ footer_font_size=20
 footer_foreground="#000000"
 footer_background="none"
 
+# Convert to PNG if file not PNG
+convert_to_png="yes"
+
 # Open Image when convert done
 open_image="yes"
 EOF
@@ -129,6 +132,10 @@ function autoRun() {
       backupOriginalPhoto "${get_file_name}"
 
       title "${COLOR_SKY}[+] CONVERTING${COLOR_DEFAULT}"
+
+      if [ "${convert_to_png}" == "yes" ]; then
+        convertToPng
+      fi
       
       if [ "${convert_rounded}" == "yes" ]; then
         convertRounded
@@ -176,6 +183,17 @@ function backupOriginalPhoto() {
     subtitle "[+]*Backup*File*"
     check
 
+  fi
+}
+
+function convertToPng() {
+  extension="${file_name##*.}"
+  if [ "${extension}" != "png" ]; then
+    subtitle "[+]*Convert*to*PNG*"
+
+    convert ${file_name} "${file_name%.*}.png"
+    file_name=${file_name%.*}.png
+    check
   fi
 }
 
