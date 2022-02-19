@@ -7,3 +7,44 @@
 </p>
 
 Awesomeshot is command-line screenshot tool written in `bash 5.1.16+`. Awesomeshot editing automatically your screenshot.
+
+## Install Dependencies
+
+> - [**Termux:API**](https://f-droid.org/en/packages/com.termux.api/) Application must be installed, this program call some API from Termux like
+> `termux-media-scan` and `termux-open`.
+
+- Packages
+
+```bash
+pkg i -y termux-api imagemagick inotify-tools
+```
+
+## Install This Program
+
+- Clone or Download This Repository
+
+```bash
+git clone --depth=1 https://github.com/mayTermux/awesomeshot.git
+```
+
+- Enter Directory this program
+
+```bash
+cd awesomeshot
+```
+
+- Copy awesomeshot into binary or program folder
+
+```bash
+cp awesomeshot $PREFIX/bin/
+```
+
+or
+
+```bash
+install awesomeshot $PREFIX/bin/
+```
+
+## Known Bug
+
+- Redudant execute when default format file `JPG`
