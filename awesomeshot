@@ -58,7 +58,7 @@ convert_footer="yes"
 
 footer_text=" Shot by Awesomeshot"
 footer_position="South"
-footer_xy="+0+30"
+footer_xy="+0+45"
 footer_font="JetBrains-Mono-Medium-Nerd-Font-Complete"
 footer_font_size=20
 footer_foreground="#000000"
