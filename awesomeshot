@@ -56,11 +56,11 @@ shadow_size="75x30+0+30"
 # Change this value to "" or whatever for disable convert
 convert_footer="yes"
 
-footer_text=" Shot by Awesomeshot"
+footer_text=" Shot by Awesomeshot"
 footer_position="South"
 footer_xy="+0+45"
 footer_font="JetBrains-Mono-Medium-Nerd-Font-Complete"
-footer_font_size=20
+footer_font_size=30
 footer_foreground="#000000"
 footer_background="none"
 
