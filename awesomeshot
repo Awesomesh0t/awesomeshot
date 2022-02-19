@@ -103,19 +103,21 @@ function subtitle() {
 }
 
 function check() {
+  #   
+  #   
   if [[ $? -eq 0 && ${PIPESTATUS[0]} -eq 0 ]]; then
 
-    echo -e " ${COLOR_SUCCESS}[SUCCESS]${COLOR_DEFAULT} "
+    echo -e " ${COLOR_SUCCESS}${COLOR_DEFAULT} "
 
   else
 
-    echo -e " ${COLOR_DANGER}[FAILED]${COLOR_DEFAULT} "
+    echo -e " ${COLOR_DANGER}${COLOR_DEFAULT} "
 
   fi
 }
 
 function autoRun() {
-  
+  setterm -cursor off 
   count=1
   header
   title "${COLOR_SKY}[?] WAITING TO TAKE SCREENSHOT${COLOR_DEFAULT}             [${COLOR_WARNING}${count}${COLOR_DEFAULT}]"
