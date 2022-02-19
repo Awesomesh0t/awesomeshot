@@ -160,6 +160,8 @@ function autoRun() {
         convertFooter
       fi
 
+      termux-media-scan "${file_name}" 2> /dev/null
+
       if [ "${open_image}" == "yes" ]; then
         termux-open "${file_name}"
       fi
