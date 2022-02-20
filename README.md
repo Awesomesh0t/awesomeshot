@@ -44,7 +44,3 @@ or
 ```bash
 install awesomeshot $PREFIX/bin/
 ```
-
-## Known Bug
-
-- Redudant execute when default format file `JPG`
