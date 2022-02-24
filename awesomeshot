@@ -95,6 +95,9 @@ function getUserConfig() {
 
 function generateDefaultConfig() {
   if [ ! -f "${config_file}" ]; then
+    if [ ! -d "~/.config/awesomeshot" ]; then
+      mkdir ~/.config/awesomeshot
+    fi
     printf '%s\n' "$config" > "$config_file"
     stat "SUCCESS" "Success" "Default config has been generated"
     exit
