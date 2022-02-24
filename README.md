@@ -10,7 +10,7 @@ Awesomeshot is command-line screenshot tool written in `bash 5.1.16+`. Awesomesh
 
 ## Install Dependencies
 
-> - [**Termux:API**](https://f-droid.org/en/packages/com.termux.api/) Application must be installed, this program call some API from Termux like
+> - [**Termux:API**](https://f-droid.org/en/packages/com.termux.api/) Application must be installed, this program call some API from Termux like <br>
 > `termux-media-scan` and `termux-open`.
 
 - Packages
