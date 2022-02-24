@@ -95,13 +95,16 @@ function getUserConfig() {
 
 function generateDefaultConfig() {
   if [ ! -f "${config_file}" ]; then
+    if [ ! -d "~/.config/awesomeshot" ]; then
+      mkdir ~/.config/awesomeshot
+    fi
     printf '%s\n' "$config" > "$config_file"
     stat "SUCCESS" "Success" "Default config has been generated"
     exit
   fi
 
   if [ -f "${config_file}" ]; then
-    read -p "  Config '~/.config/awesomeshot/awesomeshot.conf' already exists, do you want to generate default config [y/N] : " ask
+    read -p "  Config '~/.config/awesomeshot/awesomeshot.conf' already exists, do you want to generate default config [y/N] " ask
     case "${ask}" in
       y|Y )
         printf '%s\n' "$config" > "$config_file"
