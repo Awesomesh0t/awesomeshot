@@ -104,7 +104,7 @@ function generateDefaultConfig() {
   fi
 
   if [ -f "${config_file}" ]; then
-    read -p "  Config '~/.config/awesomeshot/awesomeshot.conf' already exists, do you want to generate default config [y/N] : " ask
+    read -p "  Config '~/.config/awesomeshot/awesomeshot.conf' already exists, do you want to generate default config [y/N] " ask
     case "${ask}" in
       y|Y )
         printf '%s\n' "$config" > "$config_file"
