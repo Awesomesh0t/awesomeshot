@@ -8,6 +8,6 @@
 
 Awesomeshot is command-line screenshot tool written in `bash 5.1.16+`. Awesomeshot editing automatically your screenshot.
 
-<img src="https://user-images.githubusercontent.com/66439853/155538500-f226d4a0-34a3-49c1-b9f0-b5750af39916.png" alt="awesomeshot" align="right" height="240px">
+<img src="https://user-images.githubusercontent.com/66439853/155538500-f226d4a0-34a3-49c1-b9f0-b5750af39916.png" alt="awesomeshot">
 
-### More: \[[Dependencies](https://github.com/mayTermux/awesomeshot/wiki/Dependencies)\] \[[Installation](https://github.com/mayTermux/awesomeshot/wiki/Installation)\] \[[Wiki](https://github.com/mayTermux/awesomeshot/wiki)\] 
+### More: \[[Dependencies](https://github.com/mayTermux/awesomeshot/wiki/Dependencies)\] \[[Installation](https://github.com/mayTermux/awesomeshot/wiki/Installation)\] \[[Wiki](https://github.com/mayTermux/awesomeshot/wiki)\] \[[Customizing Config File](https://github.com/mayTermux/awesomeshot/wiki/Customizing-Config-File)\]
