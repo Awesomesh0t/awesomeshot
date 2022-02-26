@@ -34,6 +34,14 @@ backup="yes"
 # PATH backup original photo or screenshot
 path_backup="${HOME}/.config/awesomeshot/backup"
 
+# Array Hex Color
+hex_color=(
+  "#F8F9FA" # white
+  "#000000" # black
+  "#333333" # gray
+  "#A8D7FE" # blue sky
+)
+
 # Change this value to "" or whatever for disable convert
 convert_rounded="yes"
 
@@ -44,7 +52,7 @@ border_radius=15
 convert_border="yes"
 
 # Change this value to "none" for transparent background
-border_color="#F8F9FA"
+border_color="${hex_color[0]}"
 
 border_size=70
 
@@ -52,7 +60,7 @@ border_size=70
 # Change this value to "" or whatever for disable convert
 convert_shadow="yes"
 
-shadow_color="#000000"
+shadow_color="${hex_color[1]}"
 shadow_size="75x30+0+30"
 
 # Footer
@@ -64,7 +72,7 @@ footer_position="South"
 footer_xy="+0+45"
 footer_font="JetBrains-Mono-Medium-Nerd-Font-Complete"
 footer_font_size=30
-footer_foreground="#000000"
+footer_foreground="${hex_color[1]}"
 footer_background="none"
 
 # Convert to PNG if file not PNG
