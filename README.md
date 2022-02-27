@@ -12,6 +12,9 @@ Awesomeshot is command-line screenshot tool written in `bash 5.1.16+`. Awesomesh
 
 ### More: \[[Dependencies](https://github.com/mayTermux/awesomeshot/wiki/Dependencies)\] \[[Installation](https://github.com/mayTermux/awesomeshot/wiki/Installation)\] \[[Wiki](https://github.com/mayTermux/awesomeshot/wiki)\] \[[Customizing Config File](https://github.com/mayTermux/awesomeshot/wiki/Customizing-Config-File)\]
 
+## How awesomeshot work?
+- [https://github.com/mayTermux/awesomeshot/issues/2#issuecomment-1052047095](https://github.com/mayTermux/awesomeshot/issues/2#issuecomment-1052047095)
+
 ## Showcase
 **Upload your custom config or script `Awesomeshot` [here](https://github.com/mayTermux/awesomeshot/issues/4)**
 
