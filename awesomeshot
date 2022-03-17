@@ -323,7 +323,7 @@ function lampuMerah(){
     :
   fi
 
-  rad=$( echo "0.003 * ${w} * ${h} / 100" | bc )
+  rad=$( echo "0.0025 * ${w} * ${h} / 100" | bc )
   br=$( echo "${rad} * 5" | bc )
   x0=$( echo "${rad} * 3" | bc )
   y0=$( echo "${br} * 0.5" | bc )
