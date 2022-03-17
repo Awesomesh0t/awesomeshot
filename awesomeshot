@@ -317,7 +317,7 @@ function lampuMerah(){
 
   if [[ $w > $h ]]; then
     h=$w
-  elif [[ $h > $w ]]; then
+  elif [[ $w < $h ]]; then
     w=$h
   else
     :
