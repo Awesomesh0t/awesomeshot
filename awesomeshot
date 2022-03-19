@@ -5,7 +5,7 @@
 #
 # Copyright (c) 2021 - 2022 xShin
 
-version=1.0.1
+version=1.0.2
 
 XDG_CONFIG_HOME=${XDG_CONFIG_HOME:-${HOME}/.config}
 config_file="${XDG_CONFIG_HOME}/awesomeshot/awesomeshot.conf"
@@ -42,11 +42,11 @@ hex_color=(
   "#A8D7FE" # blue sky
 )
 
-# Add the header
-header="yes"
+# Change this value to "" or whatever for disable convert
+convert_titlebar="yes"
 
-# Where the header place if yes header add on image if no or "" header will be added at out of image
-add_on_img="yes"
+# Where the header place if yes header add on image if no or "" title bar will be added at out of image
+add_on_img=""
 
 # Change this value to "" or whatever for disable convert
 convert_rounded="yes"
@@ -181,10 +181,10 @@ function autoRun() {
           backupOriginalPhoto "${get_file_name}"
         fi
 
-        title "${COLOR_SKY}[+] EDTING IMAGE${COLOR_DEFAULT}"
+        title "${COLOR_SKY}[+] EDITING IMAGE${COLOR_DEFAULT}"
          
-        if [ "${header}" == "yes" ]; then
-          lampuMerah
+        if [ "${convert_titlebar}" == "yes" ]; then
+          convertTitleBar
         fi
 
         if [ "${convert_rounded}" == "yes" ]; then
@@ -234,10 +234,10 @@ function manualRun() {
       backupOriginalPhoto "${get_file_name}"
     fi
 
-    title "${COLOR_SKY}[+] EDTING IMAGE${COLOR_DEFAULT}"
+    title "${COLOR_SKY}[+] EDITING IMAGE${COLOR_DEFAULT}"
       
-    if [ "${header}" == "yes" ]; then
-      lampuMerah
+    if [ "${convert_titlebar}" == "yes" ]; then
+      convertTitleBar
     fi
 
     if [ "${convert_rounded}" == "yes" ]; then
@@ -304,8 +304,8 @@ function convertToPng() {
   fi
 }
 
-function lampuMerah(){
-  subtitle "[+]*Set*Header*"
+function convertTitleBar(){
+  subtitle "[+]*Set*Title*Bar*"
 
   g="#27C93F" #green
   y="#FFBD2E" #yellow
