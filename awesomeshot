@@ -305,7 +305,7 @@ function convertToPng() {
 }
 
 function convertTitleBar(){
-  subtitle "[+]*Set*Header*"
+  subtitle "[+]*Set*Title*Bar*"
 
   g="#27C93F" #green
   y="#FFBD2E" #yellow
