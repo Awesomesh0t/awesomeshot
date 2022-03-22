@@ -312,16 +312,8 @@ function convertTitleBar(){
   r="#FF5F56" #red
   b="#282C34" #black
 
-  w=$(magick ${file_name} -format "%w" info:)
-  h=$(magick ${file_name} -format "%h" info:)
-
-  if [[ $w > $h ]]; then
-    h=$w
-  elif [[ $w < $h ]]; then
-    w=$h
-  else
-    :
-  fi
+  w=500
+  h=1000
 
   rad=$( echo "0.0025 * ${w} * ${h} / 100" | bc )
   br=$( echo "${rad} * 5" | bc )
