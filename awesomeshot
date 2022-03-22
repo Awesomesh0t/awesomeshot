@@ -312,10 +312,10 @@ function convertTitleBar(){
   r="#FF5F56" #red
   b="#282C34" #black
 
-  w=500
-  h=1000
+  width=500
+  height=1000
 
-  rad=$( echo "0.0025 * ${w} * ${h} / 100" | bc )
+  rad=$( echo "0.0025 * ${width} * ${height} / 100" | bc )
   br=$( echo "${rad} * 5" | bc )
   x0=$( echo "${rad} * 3" | bc )
   y0=$( echo "${br} * 0.5" | bc )
