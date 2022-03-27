@@ -83,7 +83,7 @@ convert_border="yes"
 border_color="${hex_color[0]}"
 
 # This variable serves to set how many size of the border
-border_size=15
+border_size=50
 
 # This variable serves to convert the shadow of image, change this value
 # to blank or whatever for disable function and "yes" for enable function.
