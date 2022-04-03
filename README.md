@@ -6,7 +6,7 @@
 <a href="https://github.com/mayTermux/awesomeshot/releases"><img src="https://img.shields.io/github/release/mayTermux/awesomeshot.svg"></a>
 </p>
 
-Awesomeshot is command-line screenshot tool written in `bash 5.1.16+`. Awesomeshot editing automatically your screenshot.
+Awesomeshot is command-line screenshot tool written in bash 5.1.16+. Awesomeshot editing automatically your screenshot.
 
 <img src="https://i.ibb.co/c6YLPNV/Screenshot-20220319-192552-Termux.png" alt="awesomeshot">
 
