@@ -45,6 +45,7 @@ path_backup="/sdcard/DCIM/awesomeshot"
 hex_color=(
   "#F8F9FA" # white
   "#000000" # black
+  "#282C34" # black-gray
   "#333333" # gray
   "#A8D7FE" # blue sky
 )
