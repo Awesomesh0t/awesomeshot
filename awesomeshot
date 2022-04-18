@@ -39,7 +39,7 @@ convert_to_png="yes"
 backup="yes"
 
 # This variable serves to set the original photo backup PATH
-path_backup="${HOME}/.config/awesomeshot/backup"
+path_backup="/sdcard/DCIM/awesomeshot"
 
 # Array Hex Color
 hex_color=(
@@ -252,7 +252,7 @@ function autoRun() {
         fi
 
         if [ "${backup}" == "yes" ]; then
-          title "${COLOR_SKY}[+] BACKUP${COLOR_DEFAULT}"
+          title "${COLOR_SKY}[+] BACKUP IMAGE${COLOR_DEFAULT}"
           backupOriginalPhoto "${get_file_name}"
         fi
 
@@ -305,7 +305,7 @@ function manualRun() {
     fi
 
     if [ "${backup}" == "yes" ]; then
-      title "${COLOR_SKY}[+] BACKUP${COLOR_DEFAULT}"
+      title "${COLOR_SKY}[+] BACKUP IMAGE${COLOR_DEFAULT}"
       backupOriginalPhoto "${get_file_name}"
     fi
 
@@ -326,7 +326,7 @@ function manualRun() {
     if [ "${convert_border}" == "yes" ]; then
       convertBorder
     fi
-      
+
     if [ "${convert_footer}" == "yes" ]; then
       convertFooter
     fi
@@ -363,6 +363,8 @@ function backupOriginalPhoto() {
     check
 
   fi
+  termux-media-scan -r "${path_backup}" &> /dev/null
+  termux-media-scan "${path_backup}/${change_filename_backup}" &> /dev/null
 }
 
 function convertToPng() {
