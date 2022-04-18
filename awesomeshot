@@ -24,9 +24,9 @@ COLOR_SKY="\e[34m"
 read -rd '' config <<'EOF'
 # Make sure when your phone screenshot the result file image
 # PATH is same with this variable. Default my phone result file
-# image PATH on "/sdcard/Pictures/Screenshots". If not same,
+# image PATH on "/sdcard/DCIM/Screenshots". If not same,
 # you can edit this variable value
-screenshot_result_path="/sdcard/Pictures/Screenshots"
+screenshot_result_path="/sdcard/DCIM/Screenshots"
 
 # This variable serves to function to backup original photo
 # (screenshot result), change this value to blank or whatever for disable 
@@ -65,6 +65,10 @@ add_on_img=""
 # fi
 width_img=500
 height_img=1000
+
+# This variable serves to set titlebar color, if you want to custom the color, you can
+# change this value with hex color or use the one in the array list.
+titlebar_color="${hex_color[0]}"
 
 # This variable serves to convert rounded corner, change this value
 # to blank or whatever for disable convert and "yes" for enable function
@@ -175,7 +179,7 @@ function getUserConfig() {
 function generateDefaultConfig() {
   if [ ! -f "${config_file}" ]; then
     if [ ! -d "~/.config/awesomeshot" ]; then
-      mkdir ~/.config/awesomeshot
+      mkdir ~/.config/awesomeshot 2> /dev/null
     fi
     printf '%s\n' "$config" > "$config_file"
     stat "SUCCESS" "Success" "Default config has been generated"
@@ -403,7 +407,7 @@ function convertTitleBar(){
   #760x360
   if [[ "${add_on_img}" == "yes" ]]; then  
     magick $file_name -fill $b \
-      -background $b \
+      -background ${titlebar_color} \
       -gravity north \
       -chop 0x$br \
       -splice 0x$br \
@@ -413,7 +417,7 @@ function convertTitleBar(){
       $file_name
   else
     magick $file_name -fill $b \
-      -background $b \
+      -background ${titlebar_color} \
       -gravity north -splice 0x$br\
       -draw "fill ${r}   circle ${arr[0,0]},${arr[0,1]} ${arr[0,2]},${arr[0,3]}
       fill ${y}   circle ${arr[1,0]},${arr[1,1]} ${arr[1,2]},${arr[1,3]} 
