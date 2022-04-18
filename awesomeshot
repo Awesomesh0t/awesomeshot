@@ -5,7 +5,7 @@
 #
 # Copyright (c) 2021 - 2022 xShin
 
-version=1.0.2
+version=1.0.5
 
 XDG_CONFIG_HOME=${XDG_CONFIG_HOME:-${HOME}/.config}
 config_file="${XDG_CONFIG_HOME}/awesomeshot/awesomeshot.conf"
@@ -24,9 +24,14 @@ COLOR_SKY="\e[34m"
 read -rd '' config <<'EOF'
 # Make sure when your phone screenshot the result file image
 # PATH is same with this variable. Default my phone result file
-# image PATH on "/sdcard/Pictures/Screenshots". If not same,
+# image PATH on "/sdcard/DCIM/Screenshots". If not same,
 # you can edit this variable value
-screenshot_result_path="/sdcard/Pictures/Screenshots"
+screenshot_result_path="/sdcard/DCIM/Screenshots"
+
+# This variable serves to set the convert image with file type non PNG, change this value
+# to blank or whatever for disable function and "yes" for enable function.
+# Convert to PNG if file not PNG
+convert_to_png="yes"
 
 # This variable serves to function to backup original photo
 # (screenshot result), change this value to blank or whatever for disable 
@@ -34,7 +39,7 @@ screenshot_result_path="/sdcard/Pictures/Screenshots"
 backup="yes"
 
 # This variable serves to set the original photo backup PATH
-path_backup="${HOME}/.config/awesomeshot/backup"
+path_backup="/sdcard/DCIM/awesomeshot"
 
 # Array Hex Color
 hex_color=(
@@ -65,6 +70,10 @@ add_on_img=""
 # fi
 width_img=500
 height_img=1000
+
+# This variable serves to set titlebar color, if you want to custom the color, you can
+# change this value with hex color or use the one in the array list.
+titlebar_color="${hex_color[0]}"
 
 # This variable serves to convert rounded corner, change this value
 # to blank or whatever for disable convert and "yes" for enable function
@@ -143,11 +152,6 @@ footer_foreground="${hex_color[1]}"
 # change this value with hex color or use the one in the array list.
 footer_background="none"
 
-# This variable serves to set the convert image with file type non PNG, change this value
-# to blank or whatever for disable function and "yes" for enable function.
-# Convert to PNG if file not PNG
-convert_to_png="yes"
-
 # This variable serves to open the result of image (when editing finished), change this value
 # to blank or whatever for disable function and "yes" for enable function.
 open_image=""
@@ -175,7 +179,7 @@ function getUserConfig() {
 function generateDefaultConfig() {
   if [ ! -f "${config_file}" ]; then
     if [ ! -d "~/.config/awesomeshot" ]; then
-      mkdir ~/.config/awesomeshot
+      mkdir ~/.config/awesomeshot 2> /dev/null
     fi
     printf '%s\n' "$config" > "$config_file"
     stat "SUCCESS" "Success" "Default config has been generated"
@@ -233,16 +237,22 @@ function autoRun() {
       get_file_name=$(echo -e "${get_file_name_result}" | awk '{print $3}')
       if [[ "${screenshot_result_path}/${get_file_name}" != "${file_name}" || -z ${file_name} ]]; then
         subtitle "[+]*Execute*Program*"
-        file_name="${screenshot_result_path}/${get_file_name}"
+
+        # Fix bug screenshot filename ".pending" 
+        if [ ${get_file_name%%-*} == ".pending" ]; then
+          file_name="${screenshot_result_path}/${get_file_name##*-}"
+        else
+          file_name="${screenshot_result_path}/${get_file_name}"
+        fi
 
         echo -e ""
 
         if [ "${convert_to_png}" == "yes" ]; then
-          convertToPng "${get_file_name}"
+          convertToPng
         fi
 
         if [ "${backup}" == "yes" ]; then
-          title "${COLOR_SKY}[+] BACKUP${COLOR_DEFAULT}"
+          title "${COLOR_SKY}[+] BACKUP IMAGE${COLOR_DEFAULT}"
           backupOriginalPhoto "${get_file_name}"
         fi
 
@@ -295,7 +305,7 @@ function manualRun() {
     fi
 
     if [ "${backup}" == "yes" ]; then
-      title "${COLOR_SKY}[+] BACKUP${COLOR_DEFAULT}"
+      title "${COLOR_SKY}[+] BACKUP IMAGE${COLOR_DEFAULT}"
       backupOriginalPhoto "${get_file_name}"
     fi
 
@@ -316,7 +326,7 @@ function manualRun() {
     if [ "${convert_border}" == "yes" ]; then
       convertBorder
     fi
-      
+
     if [ "${convert_footer}" == "yes" ]; then
       convertFooter
     fi
@@ -353,6 +363,8 @@ function backupOriginalPhoto() {
     check
 
   fi
+  termux-media-scan -r "${path_backup}" &> /dev/null
+  termux-media-scan "${path_backup}/${change_filename_backup}" &> /dev/null
 }
 
 function convertToPng() {
@@ -397,7 +409,7 @@ function convertTitleBar(){
   #760x360
   if [[ "${add_on_img}" == "yes" ]]; then  
     magick $file_name -fill $b \
-      -background $b \
+      -background ${titlebar_color} \
       -gravity north \
       -chop 0x$br \
       -splice 0x$br \
@@ -407,7 +419,7 @@ function convertTitleBar(){
       $file_name
   else
     magick $file_name -fill $b \
-      -background $b \
+      -background ${titlebar_color} \
       -gravity north -splice 0x$br\
       -draw "fill ${r}   circle ${arr[0,0]},${arr[0,1]} ${arr[0,2]},${arr[0,3]}
       fill ${y}   circle ${arr[1,0]},${arr[1,1]} ${arr[1,2]},${arr[1,3]} 
