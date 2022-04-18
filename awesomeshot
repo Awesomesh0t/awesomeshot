@@ -26,6 +26,7 @@ read -rd '' config <<'EOF'
 # PATH is same with this variable. Default my phone result file
 # image PATH on "/sdcard/DCIM/Screenshots". If not same,
 # you can edit this variable value
+#screenshot_result_path="/sdcard/Pictures/ScreenMaster"
 screenshot_result_path="/sdcard/DCIM/Screenshots"
 
 # This variable serves to set the convert image with file type non PNG, change this value
