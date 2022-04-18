@@ -28,6 +28,11 @@ read -rd '' config <<'EOF'
 # you can edit this variable value
 screenshot_result_path="/sdcard/DCIM/Screenshots"
 
+# This variable serves to set the convert image with file type non PNG, change this value
+# to blank or whatever for disable function and "yes" for enable function.
+# Convert to PNG if file not PNG
+convert_to_png="yes"
+
 # This variable serves to function to backup original photo
 # (screenshot result), change this value to blank or whatever for disable 
 # function and "yes" for enable function
@@ -146,11 +151,6 @@ footer_foreground="${hex_color[1]}"
 # to "none" for transparent background, if you want to custom the color, you can
 # change this value with hex color or use the one in the array list.
 footer_background="none"
-
-# This variable serves to set the convert image with file type non PNG, change this value
-# to blank or whatever for disable function and "yes" for enable function.
-# Convert to PNG if file not PNG
-convert_to_png="yes"
 
 # This variable serves to open the result of image (when editing finished), change this value
 # to blank or whatever for disable function and "yes" for enable function.
