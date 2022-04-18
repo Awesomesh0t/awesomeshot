@@ -282,6 +282,7 @@ function autoRun() {
 
         termux-media-scan "${file_name}" &> /dev/null
         termux-toast -b "${hex_color[4]}" -c "${hex_color[1]}" -g middle "${file_name} done"
+        termux-notification --sound -t "awesomeshot v${version}" --image-path "${file_name}"
 
         if [ "${open_image}" == "yes" ]; then
           termux-open "${file_name}"
@@ -335,6 +336,7 @@ function manualRun() {
 
     termux-media-scan "${file_name}" &> /dev/null
     termux-toast -b "${hex_color[4]}" -c "${hex_color[1]}" -g middle "${file_name} done"
+    termux-notification --sound -t "awesomeshot v${version}" --image-path "${file_name}"
     setterm -cursor on
 
     if [ "${open_image}" == "yes" ]; then
