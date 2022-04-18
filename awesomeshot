@@ -5,7 +5,7 @@
 #
 # Copyright (c) 2021 - 2022 xShin
 
-version=1.0.2
+version=1.0.5
 
 XDG_CONFIG_HOME=${XDG_CONFIG_HOME:-${HOME}/.config}
 config_file="${XDG_CONFIG_HOME}/awesomeshot/awesomeshot.conf"
@@ -233,12 +233,18 @@ function autoRun() {
       get_file_name=$(echo -e "${get_file_name_result}" | awk '{print $3}')
       if [[ "${screenshot_result_path}/${get_file_name}" != "${file_name}" || -z ${file_name} ]]; then
         subtitle "[+]*Execute*Program*"
-        file_name="${screenshot_result_path}/${get_file_name}"
+
+        # Fix bug screenshot filename ".pending" 
+        if [ ${get_file_name%%-*} == ".pending" ]; then
+          file_name="${screenshot_result_path}/${get_file_name##*-}"
+        else
+          file_name="${screenshot_result_path}/${get_file_name}"
+        fi
 
         echo -e ""
 
         if [ "${convert_to_png}" == "yes" ]; then
-          convertToPng "${get_file_name}"
+          convertToPng
         fi
 
         if [ "${backup}" == "yes" ]; then
