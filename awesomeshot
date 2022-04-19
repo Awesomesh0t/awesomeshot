@@ -490,7 +490,7 @@ function convertFooter() {
 
 function handleInterruptByUser() {
 
-  pkill com.termux
+  #pkill com.termux
 
   echo -e "
     \n   [ ${COLOR_WARNING}ERROR${COLOR_DEFAULT} ] > ${COLOR_DANGER}${1}${COLOR_DEFAULT}\n"
