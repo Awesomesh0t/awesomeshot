@@ -5,7 +5,7 @@
 #
 # Copyright (c) 2021 - 2022 xShin
 
-version=1.0.7
+version=1.0.8
 
 XDG_CONFIG_HOME=${XDG_CONFIG_HOME:-${HOME}/.config}
 config_file="${XDG_CONFIG_HOME}/awesomeshot/awesomeshot.conf"
@@ -299,7 +299,7 @@ function autoRun() {
         fi
 
         termux-media-scan "${file_name}" &> /dev/null
-        termux-toast -b "${second_border_color}" -c "${footer_foreground}" -g top "${file_name##*/} ✅"
+        termux-toast -b "${hex_color[0]}" -c "${hex_color[1]}" -g top "${file_name##*/} ✅"
         termux-notification --action "termux-open '${file_name}'" --icon "camera_enhance" \
         --image-path "${file_name}" --priority "high" --title "📸 Awesomeshot v${version}"
 
@@ -315,6 +315,10 @@ function autoRun() {
     done
 }
 
+function getPwd() {
+  pwd=$(pwd)
+}
+
 function manualRun() {
   getUserConfig
   header
@@ -324,12 +328,12 @@ function manualRun() {
     check
 
     if [ "${convert_to_png}" == "yes" ]; then
-      convertToPng "${get_file_name}"
+      convertToPng
     fi
 
     if [ "${backup}" == "yes" ]; then
       title "${COLOR_SKY}[+] BACKUP IMAGE${COLOR_DEFAULT}"
-      backupOriginalPhoto "${get_file_name}"
+      backupOriginalPhoto "${file_name}"
     fi
 
     title "${COLOR_SKY}[+] EDITING IMAGE${COLOR_DEFAULT}"
@@ -360,7 +364,7 @@ function manualRun() {
     fi
 
     termux-media-scan "${file_name}" &> /dev/null
-    termux-toast -b "${second_border_color}" -c "${footer_foreground}" -g top "${file_name##*/} ✅"
+    termux-toast -b "${hex_color[0]}" -c "${hex_color[1]}" -g top "${file_name} ✅"
     termux-notification --action "termux-open '${file_name}'" --icon "camera_enhance" \
     --image-path "${file_name}" --priority "high" --title "📸 Awesomeshot v${version}"
 
@@ -377,14 +381,15 @@ function manualRun() {
 
 function backupOriginalPhoto() {
   change_filename_backup=$(echo $1 | sed 's/.png/_backup.png/g')
+  get_filename_suffix=${change_filename_backup##*/}
 
   if [ ! -d ${path_backup} ]; then
     mkdir -p "${path_backup}"
   fi
 
-  cp "${file_name}" "${path_backup}/${change_filename_backup}"
+  cp "${file_name}" "${path_backup}/${get_filename_suffix}"
 
-  if [ -f ${path_backup}/${change_filename_backup} ]; then
+  if [ -f ${path_backup}/${get_filename_suffix} ]; then
 
     subtitle "[+]*Backup*File*"
     check
@@ -701,7 +706,8 @@ case "${1}" in
   ;;
   -m|--manual )
     if [ ${2} ]; then
-      file_name="${2}"
+      getPwd
+      file_name="${pwd}/${2}"
       main manualRun
     else
       echo ""
