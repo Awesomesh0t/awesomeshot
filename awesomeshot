@@ -5,7 +5,7 @@
 #
 # Copyright (c) 2021 - 2022 xShin
 
-version=1.0.5
+version=1.0.6
 
 XDG_CONFIG_HOME=${XDG_CONFIG_HOME:-${HOME}/.config}
 config_file="${XDG_CONFIG_HOME}/awesomeshot/awesomeshot.conf"
@@ -26,8 +26,8 @@ read -rd '' config <<'EOF'
 # PATH is same with this variable. Default my phone result file
 # image PATH on "/sdcard/DCIM/Screenshots". If not same,
 # you can edit this variable value
-#screenshot_result_path="/sdcard/Pictures/ScreenMaster"
-screenshot_result_path="/sdcard/DCIM/Screenshots"
+screenshot_result_path="/sdcard/Pictures/ScreenMaster"
+#screenshot_result_path="/sdcard/DCIM/Screenshots"
 
 # This variable serves to set the convert image with file type non PNG, change this value
 # to blank or whatever for disable function and "yes" for enable function.
@@ -84,17 +84,30 @@ convert_rounded="yes"
 # This variable serves to set how many rounded corners
 border_radius=10
 
+# This variable serves to convert tiny first border (background image) when editing the image,
+# change this value to blank or whatever for disable convert and "yes" for enable function
+convert_first_border="yes"
+
+# This variable serves to set tiny first border color (background image), change this value
+# to "none" for transparent background, if you want to custom the color, you can
+# change this value with hex color or use the one in the array list.
+first_border_color="${hex_color[0]}"
+
+# This variable serves to set how many size of the first border
+# NOTE: make sure this value is small, otherwise it will look weird
+first_border_size=7
+
 # This variable serves to convert border (background image) when editing the image,
 # change this value to blank or whatever for disable convert and "yes" for enable function
-convert_border="yes"
+convert_second_border="yes"
 
 # This variable serves to set border color (background image), change this value
 # to "none" for transparent background, if you want to custom the color, you can
 # change this value with hex color or use the one in the array list.
-border_color="${hex_color[0]}"
+second_border_color="${hex_color[0]}"
 
-# This variable serves to set how many size of the border
-border_size=50
+# This variable serves to set how many size of the second border
+second_border_size=50
 
 # This variable serves to convert the shadow of image, change this value
 # to blank or whatever for disable function and "yes" for enable function.
@@ -268,12 +281,17 @@ function autoRun() {
           convertRounded
         fi
 
+        if [ "${convert_first_border}" == "yes" ]; then
+          convertFirstBorder
+          convertRounded
+        fi
+
         if [ "${convert_shadow}" == "yes" ]; then
           convertShadow
         fi
 
-        if [ "${convert_border}" == "yes" ]; then
-          convertBorder
+        if [ "${convert_second_border}" == "yes" ]; then
+          convertSecondBorder
         fi
       
         if [ "${convert_footer}" == "yes" ]; then
@@ -281,7 +299,7 @@ function autoRun() {
         fi
 
         termux-media-scan "${file_name}" &> /dev/null
-        termux-toast -b "${border_color}" -c "${footer_foreground}" -g top "${file_name##*/} ✅"
+        termux-toast -b "${second_border_color}" -c "${footer_foreground}" -g top "${file_name##*/} ✅"
         termux-notification --action "termux-open '${file_name}'" --icon "camera_enhance" \
         --image-path "${file_name}" --priority "high" --title "📸 Awesomeshot v${version}"
 
@@ -324,12 +342,17 @@ function manualRun() {
       convertRounded
     fi
 
+    if [ "${convert_first_border}" == "yes" ]; then
+      convertFirstBorder
+      convertRounded
+    fi
+
     if [ "${convert_shadow}" == "yes" ]; then
       convertShadow
     fi
 
-    if [ "${convert_border}" == "yes" ]; then
-      convertBorder
+    if [ "${convert_second_border}" == "yes" ]; then
+      convertSecondBorder
     fi
 
     if [ "${convert_footer}" == "yes" ]; then
@@ -337,7 +360,7 @@ function manualRun() {
     fi
 
     termux-media-scan "${file_name}" &> /dev/null
-    termux-toast -b "${border_color}" -c "${footer_foreground}" -g top "${file_name##*/} ✅"
+    termux-toast -b "${second_border_color}" -c "${footer_foreground}" -g top "${file_name##*/} ✅"
     termux-notification --action "termux-open '${file_name}'" --icon "camera_enhance" \
     --image-path "${file_name}" --priority "high" --title "📸 Awesomeshot v${version}"
 
@@ -451,6 +474,13 @@ function convertRounded() {
   check
 }
 
+function convertFirstBorder() {
+  subtitle "[+]*Set*Image*First*Border*Color*"
+
+  convert "$file_name" -bordercolor "${first_border_color}" -border ${first_border_size} "$file_name"
+  check
+}
+
 function convertShadow() {
   subtitle "[+]*Set*Image*Shadow*"
 
@@ -467,10 +497,10 @@ function convertShadow() {
   check
 }
 
-function convertBorder() {
-  subtitle "[+]*Set*Image*Border*Color*"
+function convertSecondBorder() {
+  subtitle "[+]*Set*Image*Second*Border*Color*"
 
-  convert "$file_name" -bordercolor "${border_color}" -border ${border_size} "$file_name"
+  convert "$file_name" -bordercolor "${second_border_color}" -border ${second_border_size} "$file_name"
   check
 }
 
