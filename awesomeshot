@@ -5,7 +5,7 @@
 #
 # Copyright (c) 2021 - 2022 xShin
 
-version=1.0.5
+version=1.0.8
 
 XDG_CONFIG_HOME=${XDG_CONFIG_HOME:-${HOME}/.config}
 config_file="${XDG_CONFIG_HOME}/awesomeshot/awesomeshot.conf"
@@ -26,8 +26,8 @@ read -rd '' config <<'EOF'
 # PATH is same with this variable. Default my phone result file
 # image PATH on "/sdcard/DCIM/Screenshots". If not same,
 # you can edit this variable value
-#screenshot_result_path="/sdcard/Pictures/ScreenMaster"
-screenshot_result_path="/sdcard/DCIM/Screenshots"
+screenshot_result_path="/sdcard/Pictures/ScreenMaster"
+#screenshot_result_path="/sdcard/DCIM/Screenshots"
 
 # This variable serves to set the convert image with file type non PNG, change this value
 # to blank or whatever for disable function and "yes" for enable function.
@@ -84,17 +84,30 @@ convert_rounded="yes"
 # This variable serves to set how many rounded corners
 border_radius=10
 
+# This variable serves to convert tiny first border (background image) when editing the image,
+# change this value to blank or whatever for disable convert and "yes" for enable function
+convert_first_border="yes"
+
+# This variable serves to set tiny first border color (background image), change this value
+# to "none" for transparent background, if you want to custom the color, you can
+# change this value with hex color or use the one in the array list.
+first_border_color="${hex_color[0]}"
+
+# This variable serves to set how many size of the first border
+# NOTE: make sure this value is small, otherwise it will look weird
+first_border_size=7
+
 # This variable serves to convert border (background image) when editing the image,
 # change this value to blank or whatever for disable convert and "yes" for enable function
-convert_border="yes"
+convert_second_border="yes"
 
 # This variable serves to set border color (background image), change this value
 # to "none" for transparent background, if you want to custom the color, you can
 # change this value with hex color or use the one in the array list.
-border_color="${hex_color[0]}"
+second_border_color="${hex_color[0]}"
 
-# This variable serves to set how many size of the border
-border_size=50
+# This variable serves to set how many size of the second border
+second_border_size=50
 
 # This variable serves to convert the shadow of image, change this value
 # to blank or whatever for disable function and "yes" for enable function.
@@ -268,12 +281,17 @@ function autoRun() {
           convertRounded
         fi
 
+        if [ "${convert_first_border}" == "yes" ]; then
+          convertFirstBorder
+          convertRounded
+        fi
+
         if [ "${convert_shadow}" == "yes" ]; then
           convertShadow
         fi
 
-        if [ "${convert_border}" == "yes" ]; then
-          convertBorder
+        if [ "${convert_second_border}" == "yes" ]; then
+          convertSecondBorder
         fi
       
         if [ "${convert_footer}" == "yes" ]; then
@@ -281,7 +299,7 @@ function autoRun() {
         fi
 
         termux-media-scan "${file_name}" &> /dev/null
-        termux-toast -b "${border_color}" -c "${footer_foreground}" -g top "${file_name##*/} ✅"
+        termux-toast -b "${hex_color[0]}" -c "${hex_color[1]}" -g top "${file_name##*/} ✅"
         termux-notification --action "termux-open '${file_name}'" --icon "camera_enhance" \
         --image-path "${file_name}" --priority "high" --title "📸 Awesomeshot v${version}"
 
@@ -297,6 +315,10 @@ function autoRun() {
     done
 }
 
+function getPwd() {
+  pwd=$(pwd)
+}
+
 function manualRun() {
   getUserConfig
   header
@@ -306,12 +328,12 @@ function manualRun() {
     check
 
     if [ "${convert_to_png}" == "yes" ]; then
-      convertToPng "${get_file_name}"
+      convertToPng
     fi
 
     if [ "${backup}" == "yes" ]; then
       title "${COLOR_SKY}[+] BACKUP IMAGE${COLOR_DEFAULT}"
-      backupOriginalPhoto "${get_file_name}"
+      backupOriginalPhoto "${file_name}"
     fi
 
     title "${COLOR_SKY}[+] EDITING IMAGE${COLOR_DEFAULT}"
@@ -324,12 +346,17 @@ function manualRun() {
       convertRounded
     fi
 
+    if [ "${convert_first_border}" == "yes" ]; then
+      convertFirstBorder
+      convertRounded
+    fi
+
     if [ "${convert_shadow}" == "yes" ]; then
       convertShadow
     fi
 
-    if [ "${convert_border}" == "yes" ]; then
-      convertBorder
+    if [ "${convert_second_border}" == "yes" ]; then
+      convertSecondBorder
     fi
 
     if [ "${convert_footer}" == "yes" ]; then
@@ -337,7 +364,7 @@ function manualRun() {
     fi
 
     termux-media-scan "${file_name}" &> /dev/null
-    termux-toast -b "${border_color}" -c "${footer_foreground}" -g top "${file_name##*/} ✅"
+    termux-toast -b "${hex_color[0]}" -c "${hex_color[1]}" -g top "${file_name} ✅"
     termux-notification --action "termux-open '${file_name}'" --icon "camera_enhance" \
     --image-path "${file_name}" --priority "high" --title "📸 Awesomeshot v${version}"
 
@@ -354,14 +381,15 @@ function manualRun() {
 
 function backupOriginalPhoto() {
   change_filename_backup=$(echo $1 | sed 's/.png/_backup.png/g')
+  get_filename_suffix=${change_filename_backup##*/}
 
   if [ ! -d ${path_backup} ]; then
     mkdir -p "${path_backup}"
   fi
 
-  cp "${file_name}" "${path_backup}/${change_filename_backup}"
+  cp "${file_name}" "${path_backup}/${get_filename_suffix}"
 
-  if [ -f ${path_backup}/${change_filename_backup} ]; then
+  if [ -f ${path_backup}/${get_filename_suffix} ]; then
 
     subtitle "[+]*Backup*File*"
     check
@@ -451,6 +479,13 @@ function convertRounded() {
   check
 }
 
+function convertFirstBorder() {
+  subtitle "[+]*Set*Image*First*Border*Color*"
+
+  convert "$file_name" -bordercolor "${first_border_color}" -border ${first_border_size} "$file_name"
+  check
+}
+
 function convertShadow() {
   subtitle "[+]*Set*Image*Shadow*"
 
@@ -467,10 +502,10 @@ function convertShadow() {
   check
 }
 
-function convertBorder() {
-  subtitle "[+]*Set*Image*Border*Color*"
+function convertSecondBorder() {
+  subtitle "[+]*Set*Image*Second*Border*Color*"
 
-  convert "$file_name" -bordercolor "${border_color}" -border ${border_size} "$file_name"
+  convert "$file_name" -bordercolor "${second_border_color}" -border ${second_border_size} "$file_name"
   check
 }
 
@@ -536,13 +571,125 @@ function help() {
     awesomeshot [args] [file]
 
   META OPTIONS:
-    -h, --help          Show list of command-line options
-    -v, --version       Show version of awesomeshot
+    -h, --help            Show list of command-line options
+    -v, --version         Show version of awesomeshot
 
   RUN OPTIONS:
-    -a, --auto          Run awesomeshot with automatic while take screenshot
-    -m, --manual        Run awesomeshot with manual (this option require filename)
-    -c, --config        Generate default config awesomeshot.conf
+    -a, --auto            Run awesomeshot with automatic while take screenshot
+    -m, --manual          Run awesomeshot with manual (this option require filename)
+    -c, --config          Generate default config awesomeshot.conf
+
+  CONFIG OPTIONS:
+    screenshot_result_path  Make sure when your phone screenshot the result file image
+                            PATH is same with this variable. Default my phone result file
+                            image PATH on '/sdcard/DCIM/Screenshots'. If not same,
+                            you can edit this variable value
+
+    convert_to_png          This variable serves to set the convert image with file type non PNG, change this value
+                            to blank or whatever for disable function and 'yes' for enable function.
+                            Convert to PNG if file not PNG
+
+    backup                  This variable serves to function to backup original photo
+                            (screenshot result), change this value to blank or whatever for disable 
+                            function and 'yes' for enable function
+
+    path_backup             This variable serves to set the original photo backup PATH
+
+    hex_color               Array Hex Color
+
+    convert_titlebar        This variable serves to convert title bar when editing the image, change this value
+                            to blank or whatever for disable convert and 'yes' for enable function
+
+    add_on_img              This variable serves to set where the title bar place, if 'yes' the title bar add on image,
+                            if blank or whatever the title bar will be added at out of image
+
+    width_img & height_img  This variable serves to set the width and height size of title bar.
+                            NOTE (Bug Found):
+                            - Sometimes the title bar result is too big or too small
+                            width_img=magick file_name - format '%w' info:
+                            height_img=magick file_name - format '%h' info:
+                            if (( width_img > height_img )); then
+                              height_img=width_img
+                            elif (( width_img < height_img )); then
+                              width_img=height_img
+                            fi
+
+    titlebar_color          This variable serves to set titlebar color, if you want to custom the color, you can
+                            change this value with hex color or use the one in the array list.
+
+    convert_rounded         This variable serves to convert rounded corner, change this value
+                            to blank or whatever for disable convert and 'yes' for enable function
+
+    border_radius           This variable serves to set how many rounded corners
+
+    convert_first_border    This variable serves to convert tiny first border (background image) when editing the image,
+                            change this value to blank or whatever for disable convert and 'yes' for enable function
+
+    first_border_color      This variable serves to set tiny first border color (background image), change this value
+                            to 'none' for transparent background, if you want to custom the color, you can
+                            change this value with hex color or use the one in the array list.
+
+    first_border_size       This variable serves to set how many size of the first border
+                            NOTE: make sure this value is small, otherwise it will look weird
+
+    convert_second_border   This variable serves to convert border (background image) when editing the image,
+                            change this value to blank or whatever for disable convert and 'yes' for enable function
+
+    second_border_color     This variable serves to set border color (background image), change this value
+                            to 'none' for transparent background, if you want to custom the color, you can
+                            change this value with hex color or use the one in the array list.
+
+    second_border_size      This variable serves to set how many size of the second border
+
+    convert_shadow          This variable serves to convert the shadow of image, change this value
+                            to blank or whatever for disable function and 'yes' for enable function.
+
+    shadow_color            This variable serves to set shadow color, if you want to custom the color, you can
+                            change this value with hex color or use the one in the array list.
+
+    shadow_size             This variable serves to set shadow size, this variable has four values:
+                            shadow_size='75x30+0+30'
+                            that mean:
+                            - bottom shadow is x75
+                            - right shadow is +30
+                            - top shadow is +0
+                            - left shadow is +30
+
+    convert_footer          This variable serves to convert the footer text, change this value
+                            to blank or whatever for disable function and 'yes' for enable function.
+
+    footer_text             This variable serves to set text of footer, if you want to use icon
+                            you can search on Nerd Fonts Website (https://www.nerdfonts.com/cheat-sheet)
+                            NOTE: if you use icon from Nerd Fonts, make sure 'footer_font' using nerd fonts to!
+
+    footer_position         This variable serves to set text position of footer, the value contain 8 wind direction:
+                            - NorthWest
+                            - North
+                            - West
+                            - Center
+                            - East
+                            - SouthWest
+                            - South
+                            - SouthEast
+                            NOTE: Default value is 'South'
+
+    footer_xy               This variable serves to set position of 'X' and 'Y'
+
+    footer_font             This variable serves to set the font used when converting, you can check the list font
+                            available to use for ImageMagick by command: 
+                            magick convert -list font | grep -iE 'font:.*'
+
+    footer_font_size        This variable serves to set font size
+
+    footer_foreground       This variable serves to set the text color, if you want to custom the color, you can
+                            change this value with hex color or use the one in the array list.
+
+    footer_background       This variable serves to set footer background color (background text), change this value
+                            to 'none' for transparent background, if you want to custom the color, you can
+                            change this value with hex color or use the one in the array list.
+
+    open_image              This variable serves to open the result of image (when editing finished), change this value
+                            to blank or whatever for disable function and 'yes' for enable function.
   "
 }
 
@@ -559,7 +706,8 @@ case "${1}" in
   ;;
   -m|--manual )
     if [ ${2} ]; then
-      file_name="${2}"
+      getPwd
+      file_name="${pwd}/${2}"
       main manualRun
     else
       echo ""
