@@ -5,7 +5,7 @@
 #
 # Copyright (c) 2021 - 2022 xShin
 
-version=1.0.8
+version=1.0.9
 
 XDG_CONFIG_HOME=${XDG_CONFIG_HOME:-${HOME}/.config}
 config_file="${XDG_CONFIG_HOME}/awesomeshot/awesomeshot.conf"
@@ -75,18 +75,59 @@ height_img=1000
 
 # This variable serves to set titlebar color, if you want to custom the color, you can
 # change this value with hex color or use the one in the array list.
-titlebar_color="${hex_color[0]}"
+titlebar_color="${hex_color[2]}"
+
+# This variable serves to convert the titlebar text, change this value
+# to blank or whatever for disable function and "yes" for enable function.
+convert_titlebar_text="yes"
+
+# This variable serves to set titlebar text, if you want to use icon
+# you can search on Nerd Fonts Website (https://www.nerdfonts.com/cheat-sheet)
+# NOTE: if you use icon from Nerd Fonts, make sure "titlebar_text_font" using nerd fonts to!
+titlebar_text="גּ awesomeshot"
+
+# This variable serves to set text position of titlebar text, the value contain 8 wind direction:
+# - NorthWest
+# - North
+# - West
+# - Center
+# - East
+# - SouthWest
+# - South
+# - SouthEast
+# NOTE: Default value is "North"
+titlebar_text_position="north"
+
+# This variable serves to set font size
+titlebar_text_size="35"
+
+# This variable serves to set the text color, if you want to custom the color, you can
+# change this value with hex color or use the one in the array list.
+titlebar_text_color="${hex_color[0]}"
+
+# This variable serves to set titlebar text background color (background text), change this value
+# to "none" for transparent background, if you want to custom the color, you can
+# change this value with hex color or use the one in the array list.
+titlebar_text_background="none"
+
+# This variable serves to set the font used when converting, you can check the list font
+# available to use for ImageMagick by command: 
+# - magick convert -list font | grep -iE 'font:.*'
+titlebar_text_font="JetBrains-Mono-Medium-Nerd-Font-Complete"
+
+# This variable serves to set position of "X" and "Y" titlebar text
+titlebar_text_xy="+0+5"
 
 # This variable serves to convert rounded corner, change this value
 # to blank or whatever for disable convert and "yes" for enable function
 convert_rounded="yes"
 
 # This variable serves to set how many rounded corners
-border_radius=10
+border_radius=20
 
 # This variable serves to convert tiny first border (background image) when editing the image,
 # change this value to blank or whatever for disable convert and "yes" for enable function
-convert_first_border="yes"
+convert_first_border=""
 
 # This variable serves to set tiny first border color (background image), change this value
 # to "none" for transparent background, if you want to custom the color, you can
@@ -128,7 +169,7 @@ shadow_size="75x30+0+30"
 
 # This variable serves to convert the footer text, change this value
 # to blank or whatever for disable function and "yes" for enable function.
-convert_footer="yes"
+convert_footer=""
 
 # This variable serves to set text of footer, if you want to use icon
 # you can search on Nerd Fonts Website (https://www.nerdfonts.com/cheat-sheet)
@@ -275,6 +316,9 @@ function autoRun() {
          
         if [ "${convert_titlebar}" == "yes" ]; then
           convertTitleBar
+          if [ "${convert_titlebar_text}" == "yes" ]; then
+            convertTitleBarText
+          fi
         fi
 
         if [ "${convert_rounded}" == "yes" ]; then
@@ -340,6 +384,9 @@ function manualRun() {
       
     if [ "${convert_titlebar}" == "yes" ]; then
       convertTitleBar
+      if [ "${convert_titlebar_text}" == "yes" ]; then
+        convertTitleBarText
+      fi
     fi
 
     if [ "${convert_rounded}" == "yes" ]; then
@@ -466,6 +513,21 @@ function convertTitleBar(){
   check
 }
 
+function convertTitleBarText() {
+  subtitle "[+]*Set*Title*Bar*Text"
+
+  echo -n "${titlebar_text}" |
+  convert "${file_name}" \
+    -gravity "${titlebar_text_position}" \
+    -pointsize "${titlebar_text_size}" \
+    -fill "${titlebar_text_color}" \
+    -undercolor "${titlebar_text_background}" \
+    -font "${titlebar_text_font}" \
+    -annotate "${titlebar_text_xy}" \
+    @- "${file_name}"
+  check
+}
+
 function convertRounded() {
   subtitle "[+]*Set*Rounded*Corner*"
 
@@ -571,125 +633,158 @@ function help() {
     awesomeshot [args] [file]
 
   META OPTIONS:
-    -h, --help            Show list of command-line options
-    -v, --version         Show version of awesomeshot
+    -h, --help                Show list of command-line options
+    -v, --version             Show version of awesomeshot
 
   RUN OPTIONS:
-    -a, --auto            Run awesomeshot with automatic while take screenshot
-    -m, --manual          Run awesomeshot with manual (this option require filename)
-    -c, --config          Generate default config awesomeshot.conf
+    -a, --auto                Run awesomeshot with automatic while take screenshot
+    -m, --manual              Run awesomeshot with manual (this option require filename)
+    -c, --config              Generate default config awesomeshot.conf
 
   CONFIG OPTIONS:
-    screenshot_result_path  Make sure when your phone screenshot the result file image
-                            PATH is same with this variable. Default my phone result file
-                            image PATH on '/sdcard/DCIM/Screenshots'. If not same,
-                            you can edit this variable value
+    screenshot_result_path    Make sure when your phone screenshot the result file image
+                              PATH is same with this variable. Default my phone result file
+                              image PATH on '/sdcard/DCIM/Screenshots'. If not same,
+                              you can edit this variable value
 
-    convert_to_png          This variable serves to set the convert image with file type non PNG, change this value
-                            to blank or whatever for disable function and 'yes' for enable function.
-                            Convert to PNG if file not PNG
+    convert_to_png            This variable serves to set the convert image with file type non PNG, change this value
+                              to blank or whatever for disable function and 'yes' for enable function.
+                              Convert to PNG if file not PNG
 
-    backup                  This variable serves to function to backup original photo
-                            (screenshot result), change this value to blank or whatever for disable 
-                            function and 'yes' for enable function
+    backup                    This variable serves to function to backup original photo
+                              (screenshot result), change this value to blank or whatever for disable 
+                              function and 'yes' for enable function
 
-    path_backup             This variable serves to set the original photo backup PATH
+    path_backup               This variable serves to set the original photo backup PATH
 
-    hex_color               Array Hex Color
+    hex_color                 Array Hex Color
 
-    convert_titlebar        This variable serves to convert title bar when editing the image, change this value
-                            to blank or whatever for disable convert and 'yes' for enable function
+    convert_titlebar          This variable serves to convert title bar when editing the image, change this value
+                              to blank or whatever for disable convert and 'yes' for enable function
 
-    add_on_img              This variable serves to set where the title bar place, if 'yes' the title bar add on image,
-                            if blank or whatever the title bar will be added at out of image
+    add_on_img                This variable serves to set where the title bar place, if 'yes' the title bar add on image,
+                              if blank or whatever the title bar will be added at out of image
 
-    width_img & height_img  This variable serves to set the width and height size of title bar.
-                            NOTE (Bug Found):
-                            - Sometimes the title bar result is too big or too small
-                            width_img=magick file_name - format '%w' info:
-                            height_img=magick file_name - format '%h' info:
-                            if (( width_img > height_img )); then
-                              height_img=width_img
-                            elif (( width_img < height_img )); then
-                              width_img=height_img
-                            fi
+    width_img & height_img    This variable serves to set the width and height size of title bar.
+                              NOTE (Bug Found):
+                              - Sometimes the title bar result is too big or too small
+                              width_img=magick file_name - format '%w' info:
+                              height_img=magick file_name - format '%h' info:
+                              if (( width_img > height_img )); then
+                                height_img=width_img
+                              elif (( width_img < height_img )); then
+                                width_img=height_img
+                              fi
 
-    titlebar_color          This variable serves to set titlebar color, if you want to custom the color, you can
-                            change this value with hex color or use the one in the array list.
+    titlebar_color            This variable serves to set titlebar color, if you want to custom the color, you can
+                              change this value with hex color or use the one in the array list.
 
-    convert_rounded         This variable serves to convert rounded corner, change this value
-                            to blank or whatever for disable convert and 'yes' for enable function
+    convert_titlebar_text     This variable serves to convert the titlebar text, change this value
+                              to blank or whatever for disable function and 'yes' for enable function.
 
-    border_radius           This variable serves to set how many rounded corners
+    titlebar_text             This variable serves to set titlebar text, if you want to use icon
+                              you can search on Nerd Fonts Website (https://www.nerdfonts.com/cheat-sheet)
+                              NOTE: if you use icon from Nerd Fonts, make sure 'titlebar_text_font' using nerd fonts to!
 
-    convert_first_border    This variable serves to convert tiny first border (background image) when editing the image,
-                            change this value to blank or whatever for disable convert and 'yes' for enable function
+    titlebar_text_position    This variable serves to set text position of titlebar text, the value contain 8 wind direction:
+                              - NorthWest
+                              - North
+                              - West
+                              - Center
+                              - East
+                              - SouthWest
+                              - South
+                              - SouthEast
+                              NOTE: Default value is 'North'
 
-    first_border_color      This variable serves to set tiny first border color (background image), change this value
-                            to 'none' for transparent background, if you want to custom the color, you can
-                            change this value with hex color or use the one in the array list.
+    titlebar_text_size        This variable serves to set font size
 
-    first_border_size       This variable serves to set how many size of the first border
-                            NOTE: make sure this value is small, otherwise it will look weird
+    titlebar_text_color       This variable serves to set the text color, if you want to custom the color, you can
+                              change this value with hex color or use the one in the array list.
 
-    convert_second_border   This variable serves to convert border (background image) when editing the image,
-                            change this value to blank or whatever for disable convert and 'yes' for enable function
+    titlebar_text_background  This variable serves to set titlebar text background color (background text), change this value
+                              to 'none' for transparent background, if you want to custom the color, you can
+                              change this value with hex color or use the one in the array list.
 
-    second_border_color     This variable serves to set border color (background image), change this value
-                            to 'none' for transparent background, if you want to custom the color, you can
-                            change this value with hex color or use the one in the array list.
+    titlebar_text_font        This variable serves to set the font used when converting, you can check the list font
+                              available to use for ImageMagick by command: 
+                              magick convert -list font | grep -iE 'font:.*'
 
-    second_border_size      This variable serves to set how many size of the second border
+    titlebar_text_xy          This variable serves to set position of "X" and "Y" titlebar text
 
-    convert_shadow          This variable serves to convert the shadow of image, change this value
-                            to blank or whatever for disable function and 'yes' for enable function.
+    convert_rounded           This variable serves to convert rounded corner, change this value
+                              to blank or whatever for disable convert and 'yes' for enable function
 
-    shadow_color            This variable serves to set shadow color, if you want to custom the color, you can
-                            change this value with hex color or use the one in the array list.
+    border_radius             This variable serves to set how many rounded corners
 
-    shadow_size             This variable serves to set shadow size, this variable has four values:
-                            shadow_size='75x30+0+30'
-                            that mean:
-                            - bottom shadow is x75
-                            - right shadow is +30
-                            - top shadow is +0
-                            - left shadow is +30
+    convert_first_border      This variable serves to convert tiny first border (background image) when editing the image,
+                              change this value to blank or whatever for disable convert and 'yes' for enable function
 
-    convert_footer          This variable serves to convert the footer text, change this value
-                            to blank or whatever for disable function and 'yes' for enable function.
+    first_border_color        This variable serves to set tiny first border color (background image), change this value
+                              to 'none' for transparent background, if you want to custom the color, you can
+                              change this value with hex color or use the one in the array list.
 
-    footer_text             This variable serves to set text of footer, if you want to use icon
-                            you can search on Nerd Fonts Website (https://www.nerdfonts.com/cheat-sheet)
-                            NOTE: if you use icon from Nerd Fonts, make sure 'footer_font' using nerd fonts to!
+    first_border_size         This variable serves to set how many size of the first border
+                              NOTE: make sure this value is small, otherwise it will look weird
 
-    footer_position         This variable serves to set text position of footer, the value contain 8 wind direction:
-                            - NorthWest
-                            - North
-                            - West
-                            - Center
-                            - East
-                            - SouthWest
-                            - South
-                            - SouthEast
-                            NOTE: Default value is 'South'
+    convert_second_border     This variable serves to convert border (background image) when editing the image,
+                              change this value to blank or whatever for disable convert and 'yes' for enable function
 
-    footer_xy               This variable serves to set position of 'X' and 'Y'
+    second_border_color       This variable serves to set border color (background image), change this value
+                              to 'none' for transparent background, if you want to custom the color, you can
+                              change this value with hex color or use the one in the array list.
 
-    footer_font             This variable serves to set the font used when converting, you can check the list font
-                            available to use for ImageMagick by command: 
-                            magick convert -list font | grep -iE 'font:.*'
+    second_border_size        This variable serves to set how many size of the second border
 
-    footer_font_size        This variable serves to set font size
+    convert_shadow            This variable serves to convert the shadow of image, change this value
+                              to blank or whatever for disable function and 'yes' for enable function.
 
-    footer_foreground       This variable serves to set the text color, if you want to custom the color, you can
-                            change this value with hex color or use the one in the array list.
+    shadow_color              This variable serves to set shadow color, if you want to custom the color, you can
+                              change this value with hex color or use the one in the array list.
 
-    footer_background       This variable serves to set footer background color (background text), change this value
-                            to 'none' for transparent background, if you want to custom the color, you can
-                            change this value with hex color or use the one in the array list.
+    shadow_size               This variable serves to set shadow size, this variable has four values:
+                              shadow_size='75x30+0+30'
+                              that mean:
+                              - bottom shadow is x75
+                              - right shadow is +30
+                              - top shadow is +0
+                              - left shadow is +30
 
-    open_image              This variable serves to open the result of image (when editing finished), change this value
-                            to blank or whatever for disable function and 'yes' for enable function.
+    convert_footer            This variable serves to convert the footer text, change this value
+                              to blank or whatever for disable function and 'yes' for enable function.
+
+    footer_text               This variable serves to set text of footer, if you want to use icon
+                              you can search on Nerd Fonts Website (https://www.nerdfonts.com/cheat-sheet)
+                              NOTE: if you use icon from Nerd Fonts, make sure 'footer_font' using nerd fonts to!
+
+    footer_position           This variable serves to set text position of footer, the value contain 8 wind direction:
+                              - NorthWest
+                              - North
+                              - West
+                              - Center
+                              - East
+                              - SouthWest
+                              - South
+                              - SouthEast
+                              NOTE: Default value is 'South'
+
+    footer_xy                 This variable serves to set position of 'X' and 'Y'
+
+    footer_font               This variable serves to set the font used when converting, you can check the list font
+                              available to use for ImageMagick by command: 
+                              magick convert -list font | grep -iE 'font:.*'
+
+    footer_font_size          This variable serves to set font size
+
+    footer_foreground         This variable serves to set the text color, if you want to custom the color, you can
+                              change this value with hex color or use the one in the array list.
+
+    footer_background         This variable serves to set footer background color (background text), change this value
+                              to 'none' for transparent background, if you want to custom the color, you can
+                              change this value with hex color or use the one in the array list.
+
+    open_image                This variable serves to open the result of image (when editing finished), change this value
+                              to blank or whatever for disable function and 'yes' for enable function.
   "
 }
 
