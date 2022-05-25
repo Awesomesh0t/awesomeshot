@@ -540,7 +540,7 @@ function convertTitleBar(){
 }
 
 function convertTitleBarText() {
-  subtitle "[+]*Set*Title*Bar*Text"
+  subtitle "[+]*Set*Title*Bar*Text*"
 
   echo -n "${titlebar_text}" |
   convert "${file_name}" \
@@ -598,11 +598,8 @@ function convertSecondBorder() {
 }
 
 function convertSecondBorderGradient() {
-  subtitle "[+]*Set*Image*Second*Border*Gradient"
+  subtitle "[+]*Set*Image*Second*Border*Gradient*"
   size_wh=$(identify -format %wx%h $file_name)
-  #echo $size_wh
-  #width_gradient=$(magick "$file_name" - format '%w' info:)
-  #height_gradient=$(magick "$file_name" - format '%h' info:)
   convert \
     \( \
       xc:${second_border_gradient_color[0]} xc:${second_border_gradient_color[1]} +append \
@@ -613,16 +610,12 @@ function convertSecondBorderGradient() {
     xc: +swap -fx 'v.p{i/(w-1),j/(h-1)}' \
     ${XDG_CONFIG_HOME}/awesomeshot/backgrad/interpolate_saddle.png
 
-  #convert \( xc:${second_border_gradient_color[0]} xc:${second_border_gradient_color[1]} +append \) \
-  #  \( xc:${second_border_gradient_color[2]} xc:${second_border_gradient_color[0]} +append \) -append \
-  #  -size ${width_gradient}x${height_gradient} xc: +swap -fx 'v.p{i/(w-1),j/(h-1)}' \
-  #  ${XDG_CONFIG_HOME}/interpolate_sadle.png
   composite -gravity center "$file_name" ${XDG_CONFIG_HOME}/awesomeshot/backgrad/interpolate_saddle.png "$file_name"
   check
 }
 
 function convertFooter() {
-  subtitle "[+]*Set*Image*Footer"
+  subtitle "[+]*Set*Image*Footer*"
   echo -n "${footer_text}" |
   convert "$file_name" \
     -gravity ${footer_position} \
