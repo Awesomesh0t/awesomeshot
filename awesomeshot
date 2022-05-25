@@ -158,10 +158,19 @@ convert_second_border="yes"
 # This variable serves to set border color (background image), change this value
 # to "none" for transparent background, if you want to custom the color, you can
 # change this value with hex color or use the one in the array list.
-second_border_color="${hex_color[0]}"
+#second_border_color="${hex_color[0]}"
+second_border_color="none"
 
 # This variable serves to set how many size of the second border
 second_border_size=50
+
+convert_second_border_gradient="yes"
+
+second_border_gradient_color=(
+  "#C850C0"
+  "#FFCC70"
+  "#4158D0"
+)
 
 # This variable serves to convert the shadow of image, change this value
 # to blank or whatever for disable function and "yes" for enable function.
@@ -349,6 +358,10 @@ function autoRun() {
 
         if [ "${convert_second_border}" == "yes" ]; then
           convertSecondBorder
+        fi
+
+        if [ "${convert_second_border_gradient}" == "yes" ]; then
+          convertSecondBorderGradient
         fi
       
         if [ "${convert_footer}" == "yes" ]; then
@@ -581,6 +594,30 @@ function convertSecondBorder() {
   subtitle "[+]*Set*Image*Second*Border*Color*"
 
   convert "$file_name" -bordercolor "${second_border_color}" -border ${second_border_size} "$file_name"
+  check
+}
+
+function convertSecondBorderGradient() {
+  subtitle "[+]*Set*Image*Second*Border*Gradient"
+  size_wh=$(identify -format %wx%h $file_name)
+  #echo $size_wh
+  #width_gradient=$(magick "$file_name" - format '%w' info:)
+  #height_gradient=$(magick "$file_name" - format '%h' info:)
+  convert \
+    \( \
+      xc:${second_border_gradient_color[0]} xc:${second_border_gradient_color[1]} +append \
+    \) \
+    \( \
+      xc:${second_border_gradient_color[2]} xc:${second_border_gradient_color[0]} +append \
+    \) -append -size $size_wh \
+    xc: +swap -fx 'v.p{i/(w-1),j/(h-1)}' \
+    ${XDG_CONFIG_HOME}/awesomeshot/backgrad/interpolate_saddle.png
+
+  #convert \( xc:${second_border_gradient_color[0]} xc:${second_border_gradient_color[1]} +append \) \
+  #  \( xc:${second_border_gradient_color[2]} xc:${second_border_gradient_color[0]} +append \) -append \
+  #  -size ${width_gradient}x${height_gradient} xc: +swap -fx 'v.p{i/(w-1),j/(h-1)}' \
+  #  ${XDG_CONFIG_HOME}/interpolate_sadle.png
+  composite -gravity center "$file_name" ${XDG_CONFIG_HOME}/awesomeshot/backgrad/interpolate_saddle.png "$file_name"
   check
 }
 
