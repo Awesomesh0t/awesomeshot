@@ -5,7 +5,7 @@
 #
 # Copyright (c) 2021 - 2022 xShin
 
-version=1.0.9
+version=1.1.0
 
 XDG_CONFIG_HOME=${XDG_CONFIG_HOME:-${HOME}/.config}
 config_file="${XDG_CONFIG_HOME}/awesomeshot/awesomeshot.conf"
@@ -138,6 +138,19 @@ first_border_color="${hex_color[0]}"
 # NOTE: make sure this value is small, otherwise it will look weird
 first_border_size=7
 
+# This variable serves to convert tiny first border (background image) when editing the image,
+# change this value to blank or whatever for disable convert and "yes" for enable function
+convert_first_border=""
+
+# This variable serves to set tiny first border color (background image), change this value
+# to "none" for transparent background, if you want to custom the color, you can
+# change this value with hex color or use the one in the array list.
+first_border_color="${hex_color[0]}"
+
+# This variable serves to set how many size of the first border
+# NOTE: make sure this value is small, otherwise it will look weird
+first_border_size=7
+
 # This variable serves to convert border (background image) when editing the image,
 # change this value to blank or whatever for disable convert and "yes" for enable function
 convert_second_border="yes"
@@ -145,10 +158,41 @@ convert_second_border="yes"
 # This variable serves to set border color (background image), change this value
 # to "none" for transparent background, if you want to custom the color, you can
 # change this value with hex color or use the one in the array list.
-second_border_color="${hex_color[0]}"
+# NOTE: if convert_second_border enable and second_border_color value not none
+#       will be conflict
+#second_border_color="${hex_color[0]}"
+second_border_color="none"
 
 # This variable serves to set how many size of the second border
 second_border_size=50
+
+# This variable serves to convert border with gradient color,
+# change this value to blank or whatever for disable convert and "yes" for enable function
+convert_second_border_gradient="yes"
+
+# This variable serves to convert gradient color method
+# More information: https://legacy.imagemagick.org/Usage/misc/
+# List available method:
+# - saddle
+# - mesh
+interpolate_method="saddle"
+
+second_border_gradient_color=(
+  "#C850C0"
+  "#FFCC70"
+  "#4158D0"
+  "#FE7FAA"
+)
+
+saddle_color_top_left="${second_border_gradient_color[0]}"
+saddle_color_top_right="${second_border_gradient_color[1]}"
+saddle_color_bottom_left="${second_border_gradient_color[2]}"
+saddle_color_bottom_right="${second_border_gradient_color[0]}"
+
+mesh_color_top_left="${second_border_gradient_color[1]}"
+mesh_color_top_right="${second_border_gradient_color[1]}"
+mesh_color_bottom_left="${second_border_gradient_color[3]}"
+mesh_color_bottom_right="${second_border_gradient_color[3]}"
 
 # This variable serves to convert the shadow of image, change this value
 # to blank or whatever for disable function and "yes" for enable function.
@@ -213,8 +257,9 @@ footer_background="none"
 open_image=""
 EOF
 
-# init file_name
+# init
 file_name=""
+interpolate_file_name=""
 
 function getUserConfig() {
 
@@ -229,6 +274,8 @@ function getUserConfig() {
     source "${config_file}"
 
   fi
+
+  checkConfig
 
 }
 
@@ -336,6 +383,10 @@ function autoRun() {
 
         if [ "${convert_second_border}" == "yes" ]; then
           convertSecondBorder
+        fi
+
+        if [ "${convert_second_border_gradient}" == "yes" ]; then
+          convertSecondBorderGradient
         fi
       
         if [ "${convert_footer}" == "yes" ]; then
@@ -514,7 +565,7 @@ function convertTitleBar(){
 }
 
 function convertTitleBarText() {
-  subtitle "[+]*Set*Title*Bar*Text"
+  subtitle "[+]*Set*Title*Bar*Text*"
 
   echo -n "${titlebar_text}" |
   convert "${file_name}" \
@@ -571,8 +622,54 @@ function convertSecondBorder() {
   check
 }
 
+function interpolateSaddle() {
+  interpolate_file_name="interpolate_saddle"
+  convert \
+    \( \
+      xc:${saddle_color_top_left} xc:${saddle_color_top_right} +append \
+    \) \
+    \( \
+      xc:${saddle_color_bottom_left} xc:${saddle_color_bottom_right} +append \
+    \) -append -size $size_wh \
+    xc: +swap -fx 'v.p{i/(w-1),j/(h-1)}' \
+    ${XDG_CONFIG_HOME}/awesomeshot/backgrad/${interpolate_file_name}.png
+}
+
+function interpolateMesh() {
+  interpolate_file_name="interpolate_mesh"
+  convert \
+    \( \
+      xc:${mesh_color_top_left} xc:${mesh_color_top_right} +append \
+    \) \
+    \( \
+      xc:${mesh_color_bottom_left} xc:${mesh_color_bottom_right} +append \
+    \) -append -size ${size_wh} \
+    xc: +swap -interpolate Mesh -fx 'v.p{i/(w-1),j/(h-1)}' \
+    ${XDG_CONFIG_HOME}/awesomeshot/backgrad/${interpolate_file_name}.png
+}
+
+function convertSecondBorderGradient() {
+  subtitle "[+]*Set*Image*Second*Border*Gradient*"
+  size_wh=$(identify -format %wx%h $file_name)
+  if [ ! -d "${XDG_CONFIG_HOME}/awesomeshot/backgrad" ]; then
+    mkdir ${XDG_CONFIG_HOME}/awesomeshot/backgrad
+  fi
+
+  case ${interpolate_method} in
+    "saddle"|"Saddle" )
+      interpolateSaddle
+    ;;
+    "mesh"|"Mesh" )
+      interpolateMesh
+    ;;
+  esac
+
+  composite -gravity center "$file_name" ${XDG_CONFIG_HOME}/awesomeshot/backgrad/${interpolate_file_name}.png "$file_name"
+  check
+}
+
 function convertFooter() {
-  subtitle "[+]*Set*Image*Footer"
+  subtitle "[+]*Set*Image*Footer*"
   echo -n "${footer_text}" |
   convert "$file_name" \
     -gravity ${footer_position} \
@@ -604,15 +701,15 @@ function stat() {
 
   if [ "${2}" == "Success" ]; then
 
-    echo -e "  [ ${COLOR_SUCCESS}${1}${COLOR_DEFAULT} ] > ${3}"
+    echo -e "  [ ${COLOR_SUCCESS}${1}${COLOR_DEFAULT} ]\n  ${COLOR_SUCCESS}|\n  ╰─${COLOR_DEFAULT} ${3}"
 
   elif [ "${2}" == "Warning" ]; then
 
-    echo -e "  [ ${COLOR_WARNING}${1}${COLOR_DEFAULT} ] > ${3}"
+    echo -e "  [ ${COLOR_WARNING}${1}${COLOR_DEFAULT} ]\n  ${COLOR_WARNING}|\n  ╰─${COLOR_DEFAULT} ${3}"
 
   elif [ "${2}" == "Danger" ]; then
 
-    echo -e "  [ ${COLOR_DANGER}${1}${COLOR_DEFAULT} ] > ${3}"
+    echo -e "  [ ${COLOR_DANGER}${1}${COLOR_DEFAULT} ]\n  ${COLOR_DANGER}|\n  ╰─${COLOR_DEFAULT} ${3}"
 
   fi
   
@@ -736,6 +833,15 @@ function help() {
 
     second_border_size        This variable serves to set how many size of the second border
 
+    convert_second_border_gradient This variable severs to convert border with gradient color,
+                                   change this value to blank or whatever for disable convert and 'yes' for enable function
+
+    interpolate_method        This variable serves to convert gradient color method
+                              More information: https://legacy.imagemagick.org/Usage/misc/
+                              List available method:
+                              - saddle
+                              - mesh
+
     convert_shadow            This variable serves to convert the shadow of image, change this value
                               to blank or whatever for disable function and 'yes' for enable function.
 
@@ -790,6 +896,18 @@ function help() {
 
 function version() {
   echo -e "awesomeshot v.${version}"
+}
+
+function checkConfig() {
+  if [[ $convert_second_border == "yes" && $convert_second_border_gradient == "yes" ]]; then
+    if [ $second_border_color != "none" ]; then
+      stat "ERROR" "Danger" "Conflict detected on config '${COLOR_WARNING}convert_second_border${COLOR_DEFAULT}' and '${COLOR_WARNING}convert_second_border_gradient${COLOR_DEFAULT}' enable at the same time"
+      echo -e "
+      both variable can be enable if '${COLOR_WARNING}second_border_color${COLOR_DEFAULT}' value is none
+      "
+      exit 1
+    fi
+  fi
 }
 
 case "${1}" in
