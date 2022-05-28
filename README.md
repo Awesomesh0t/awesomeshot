@@ -8,7 +8,7 @@
 
 Awesomeshot is command-line screenshot tool written in bash 5.1.16+. Awesomeshot editing automatically your screenshot.
 
-<img src="https://i.ibb.co/c6YLPNV/Screenshot-20220319-192552-Termux.png" alt="awesomeshot">
+<img src="https://user-images.githubusercontent.com/64394320/170211137-554dfd78-8424-4699-876c-7483b45de068.png" alt="awesomeshot">
 
 ## More: 
 - [Wiki](https://github.com/mayTermux/awesomeshot/wiki)
