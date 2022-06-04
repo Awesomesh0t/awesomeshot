@@ -457,6 +457,10 @@ function manualRun() {
       convertSecondBorder
     fi
 
+    if [ "${convert_second_border_gradient}" == "yes" ]; then
+      convertSecondBorderGradient
+    fi
+
     if [ "${convert_footer}" == "yes" ]; then
       convertFooter
     fi
