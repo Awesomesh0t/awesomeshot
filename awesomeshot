@@ -5,7 +5,7 @@
 #
 # Copyright (c) 2021 - 2022 xShin
 
-version=1.1.0
+version=1.1.1
 
 XDG_CONFIG_HOME=${XDG_CONFIG_HOME:-${HOME}/.config}
 config_file="${XDG_CONFIG_HOME}/awesomeshot/awesomeshot.conf"
@@ -455,6 +455,10 @@ function manualRun() {
 
     if [ "${convert_second_border}" == "yes" ]; then
       convertSecondBorder
+    fi
+
+    if [ "${convert_second_border_gradient}" == "yes" ]; then
+      convertSecondBorderGradient
     fi
 
     if [ "${convert_footer}" == "yes" ]; then
