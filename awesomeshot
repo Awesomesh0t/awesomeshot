@@ -259,7 +259,6 @@ EOF
 
 # init
 file_name=""
-interpolate_file_name=""
 
 function getUserConfig() {
 
@@ -329,6 +328,57 @@ function check() {
   fi
 }
 
+function run () {
+  if [ "${convert_to_png}" == "yes" ]; then
+    convertToPng
+  fi
+
+  if [ "${backup}" == "yes" ]; then
+    title "${COLOR_SKY}[+] BACKUP IMAGE${COLOR_DEFAULT}"
+    backupOriginalPhoto "${file_name}"
+  fi
+
+  title "${COLOR_SKY}[+] EDITING IMAGE${COLOR_DEFAULT}"
+    
+  if [ "${convert_titlebar}" == "yes" ]; then
+    convertTitleBar
+    if [ "${convert_titlebar_text}" == "yes" ]; then
+      convertTitleBarText
+    fi
+  fi
+
+  if [ "${convert_rounded}" == "yes" ]; then
+    convertRounded
+  fi
+
+  if [ "${convert_first_border}" == "yes" ]; then
+    convertFirstBorder
+    convertRounded
+  fi
+
+  if [ "${convert_shadow}" == "yes" ]; then
+    convertShadow
+  fi
+
+  if [ "${convert_second_border}" == "yes" ]; then
+    convertSecondBorder
+  fi
+
+  if [ "${convert_second_border_gradient}" == "yes" ]; then
+    convertSecondBorderGradient
+  fi
+
+  if [ "${convert_footer}" == "yes" ]; then
+    convertFooter
+  fi
+
+  termux-media-scan "${file_name}" &> /dev/null
+  termux-toast -b "${hex_color[0]}" -c "${hex_color[1]}" -g top "${file_name} ✅"
+  termux-notification --action "termux-open '${file_name}'" --icon "camera_enhance" \
+  --image-path "${file_name}" --priority "high" --title "📸 Awesomeshot v${version}"
+}
+
+
 function autoRun() {
   getUserConfig
   count=1
@@ -350,54 +400,7 @@ function autoRun() {
 
         echo -e ""
 
-        if [ "${convert_to_png}" == "yes" ]; then
-          convertToPng
-        fi
-
-        if [ "${backup}" == "yes" ]; then
-          title "${COLOR_SKY}[+] BACKUP IMAGE${COLOR_DEFAULT}"
-          backupOriginalPhoto "${get_file_name}"
-        fi
-
-        title "${COLOR_SKY}[+] EDITING IMAGE${COLOR_DEFAULT}"
-         
-        if [ "${convert_titlebar}" == "yes" ]; then
-          convertTitleBar
-          if [ "${convert_titlebar_text}" == "yes" ]; then
-            convertTitleBarText
-          fi
-        fi
-
-        if [ "${convert_rounded}" == "yes" ]; then
-          convertRounded
-        fi
-
-        if [ "${convert_first_border}" == "yes" ]; then
-          convertFirstBorder
-          convertRounded
-        fi
-
-        if [ "${convert_shadow}" == "yes" ]; then
-          convertShadow
-        fi
-
-        if [ "${convert_second_border}" == "yes" ]; then
-          convertSecondBorder
-        fi
-
-        if [ "${convert_second_border_gradient}" == "yes" ]; then
-          convertSecondBorderGradient
-        fi
-      
-        if [ "${convert_footer}" == "yes" ]; then
-          convertFooter
-        fi
-
-        termux-media-scan "${file_name}" &> /dev/null
-        termux-toast -b "${hex_color[0]}" -c "${hex_color[1]}" -g top "${file_name##*/} ✅"
-        termux-notification --action "termux-open '${file_name}'" --icon "camera_enhance" \
-        --image-path "${file_name}" --priority "high" --title "📸 Awesomeshot v${version}"
-
+        run
 
         if [ "${open_image}" == "yes" ]; then
           termux-open "${file_name}"
@@ -422,53 +425,7 @@ function manualRun() {
   if [ -f ${file_name} ]; then
     check
 
-    if [ "${convert_to_png}" == "yes" ]; then
-      convertToPng
-    fi
-
-    if [ "${backup}" == "yes" ]; then
-      title "${COLOR_SKY}[+] BACKUP IMAGE${COLOR_DEFAULT}"
-      backupOriginalPhoto "${file_name}"
-    fi
-
-    title "${COLOR_SKY}[+] EDITING IMAGE${COLOR_DEFAULT}"
-      
-    if [ "${convert_titlebar}" == "yes" ]; then
-      convertTitleBar
-      if [ "${convert_titlebar_text}" == "yes" ]; then
-        convertTitleBarText
-      fi
-    fi
-
-    if [ "${convert_rounded}" == "yes" ]; then
-      convertRounded
-    fi
-
-    if [ "${convert_first_border}" == "yes" ]; then
-      convertFirstBorder
-      convertRounded
-    fi
-
-    if [ "${convert_shadow}" == "yes" ]; then
-      convertShadow
-    fi
-
-    if [ "${convert_second_border}" == "yes" ]; then
-      convertSecondBorder
-    fi
-
-    if [ "${convert_second_border_gradient}" == "yes" ]; then
-      convertSecondBorderGradient
-    fi
-
-    if [ "${convert_footer}" == "yes" ]; then
-      convertFooter
-    fi
-
-    termux-media-scan "${file_name}" &> /dev/null
-    termux-toast -b "${hex_color[0]}" -c "${hex_color[1]}" -g top "${file_name} ✅"
-    termux-notification --action "termux-open '${file_name}'" --icon "camera_enhance" \
-    --image-path "${file_name}" --priority "high" --title "📸 Awesomeshot v${version}"
+    run
 
     setterm -cursor on
 
@@ -627,38 +584,42 @@ function convertSecondBorder() {
 }
 
 function interpolateSaddle() {
-  interpolate_file_name="interpolate_saddle"
   convert \
+    "$file_name" \
     \( \
-      xc:${saddle_color_top_left} xc:${saddle_color_top_right} +append \
+      \( \
+        xc:${saddle_color_top_left} xc:${saddle_color_top_right} +append \
+      \) \
+      \( \
+        xc:${saddle_color_bottom_left} xc:${saddle_color_bottom_right} +append \
+      \) -append -size $size_wh \
+      xc: +swap -fx 'v.p{i/(w-1),j/(h-1)}' \
     \) \
-    \( \
-      xc:${saddle_color_bottom_left} xc:${saddle_color_bottom_right} +append \
-    \) -append -size $size_wh \
-    xc: +swap -fx 'v.p{i/(w-1),j/(h-1)}' \
-    ${XDG_CONFIG_HOME}/awesomeshot/backgrad/${interpolate_file_name}.png
+    -gravity center \
+    -compose Dst_Over -composite \
+    "$file_name"
 }
 
 function interpolateMesh() {
-  interpolate_file_name="interpolate_mesh"
   convert \
+    "$file_name" \
     \( \
-      xc:${mesh_color_top_left} xc:${mesh_color_top_right} +append \
+      \( \
+        xc:${mesh_color_top_left} xc:${mesh_color_top_right} +append \
+      \) \
+      \( \
+        xc:${mesh_color_bottom_left} xc:${mesh_color_bottom_right} +append \
+      \) -append -size $size_wh \
+      xc: +swap -interpolate Mesh -fx 'v.p{i/(w-1),j/(h-1)}' \
     \) \
-    \( \
-      xc:${mesh_color_bottom_left} xc:${mesh_color_bottom_right} +append \
-    \) -append -size ${size_wh} \
-    xc: +swap -interpolate Mesh -fx 'v.p{i/(w-1),j/(h-1)}' \
-    ${XDG_CONFIG_HOME}/awesomeshot/backgrad/${interpolate_file_name}.png
+    -gravity center \
+    -compose Dst_Over -composite \
+    "$file_name"
 }
 
 function convertSecondBorderGradient() {
   subtitle "[+]*Set*Image*Second*Border*Gradient*"
   size_wh=$(identify -format %wx%h $file_name)
-  if [ ! -d "${XDG_CONFIG_HOME}/awesomeshot/backgrad" ]; then
-    mkdir ${XDG_CONFIG_HOME}/awesomeshot/backgrad
-  fi
-
   case ${interpolate_method} in
     "saddle"|"Saddle" )
       interpolateSaddle
@@ -667,8 +628,6 @@ function convertSecondBorderGradient() {
       interpolateMesh
     ;;
   esac
-
-  composite -gravity center "$file_name" ${XDG_CONFIG_HOME}/awesomeshot/backgrad/${interpolate_file_name}.png "$file_name"
   check
 }
 
@@ -688,7 +647,7 @@ function convertFooter() {
 
 function handleInterruptByUser() {
 
-  pkill com.termux
+  #pkill com.termux
 
   echo -e "
     \n   [ ${COLOR_WARNING}ERROR${COLOR_DEFAULT} ] > ${COLOR_DANGER}${1}${COLOR_DEFAULT}\n"
