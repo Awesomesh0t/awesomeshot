@@ -249,12 +249,12 @@ initColor() {
 }
 
 printInfo() {
-    echo -e "\n${COLOR_BACKGROUND_BLUE} INFO ${COLOR_RESET} Awesomeshot running on listening mode."
+    echo -e "\n  ${COLOR_BACKGROUND_BLUE} INFO ${COLOR_RESET} Awesomeshot running on listening mode."
 
 echo -e "
-╭────────────────────────────╮
-│  ⚠ Press ${COLOR_BACKGROUND_RED} CTRL+C ${COLOR_RESET} to stop  │
-╰────────────────────────────╯
+  ╭────────────────────────────╮
+  │  ⚠ Press ${COLOR_BACKGROUND_RED} CTRL+C ${COLOR_RESET} to stop  │
+  ╰────────────────────────────╯
 "
 }
 
@@ -297,15 +297,48 @@ generateDefaultConfig() {
         printConfig
         echo -e "\n${COLOR_BACKGROUND_BLUE} INFO ${COLOR_RESET}"
         echo -e "
-╭─────────────────────────────────────╮
-│  Default config has been generated  │
-╰─────────────────────────────────────╯
+  ╭─────────────────────────────────────╮
+  │  Default config has been generated  │
+  ╰─────────────────────────────────────╯
         "
         exit
     fi
 
-    # if [ -f "${config_file}" ]; then
-    #     read -p ""
+    if [ -f "${config_file}" ]; then
+        read -p "Config already exists, do you want to generate default config? [y/n]" ask
+        case "${ask}" in
+            y|Y )
+                printConfig
+                echo -e "
+  ╭────────────────────────────────────────╮
+  │  Default config has been re-generated  │
+  ╰────────────────────────────────────────╯"
+            ;;
+            n|N )
+                exit
+            ;;
+        esac
+    fi
+}
+
+printLog() {
+    printf "**$(date +${COLOR_DARK_GRAY}%Y-%m-%d*${COLOR_RESET}%H:%M:%S)%-60s" "*${1}*" \
+    | sed 's/ /./g' | sed 's/*/ /g'
+    check
+}
+
+function check() {
+  #   
+  #   
+  if [[ $? -eq 0 && ${PIPESTATUS[0]} -eq 0 ]]; then
+
+    echo -e " ${COLOR_SUCCESS}${COLOR_DEFAULT} "
+
+  else
+
+    echo -e " ${COLOR_DANGER}${COLOR_DEFAULT} "
+
+  fi
 }
 
 getAllInit() {
@@ -316,4 +349,4 @@ getAllInit() {
 getAllInit
 printInfo
 getDistro
-generateDefaultConfig
+# generateDefaultConfig
