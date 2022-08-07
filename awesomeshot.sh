@@ -246,6 +246,10 @@ initColor() {
     COLOR_BACKGROUND_RED="\033[1;41;97m"
     COLOR_BACKGROUND_WHITE="\033[1;47;37m"
     COLOR_BACKGROUND_BLACK="\033[1;40;30m"
+
+    BLUE=$(tput setaf 4)
+    GRAY=$(tput setaf 236)
+    RESET=$(tput sgr0)
 }
 
 printInfo() {
@@ -276,7 +280,7 @@ loadConfig() {
 }
 
 printConfig() {
-    printf '%s\n' "$config" > "$config_file"
+    printf '%s\n' "$config"
 }
 
 getUserConfig() {
@@ -284,7 +288,7 @@ getUserConfig() {
         loadConfig
     elif [ ! -f "${config_file}" ]; then
         mkdir -p "${XDG_CONFIG_HOME}/awesomeshot/" 2> /dev/null
-        printConfig
+        printConfig > "$config_file"
         loadConfig
     fi
 }
@@ -294,7 +298,7 @@ generateDefaultConfig() {
         if [ ! -d "${XDG_CONFIG_HOME}/awesomeshot" ]; then
             mkdir -p "${XDG_CONFIG_HOME}/awesomeshot/" 2> /dev/null
         fi
-        printConfig
+        printConfig > "$config_file"
         echo -e "\n${COLOR_BACKGROUND_BLUE} INFO ${COLOR_RESET}"
         echo -e "
   ╭─────────────────────────────────────╮
@@ -305,10 +309,15 @@ generateDefaultConfig() {
     fi
 
     if [ -f "${config_file}" ]; then
-        read -p "Config already exists, do you want to generate default config? [y/n]" ask
+        echo -e "
+  ╭── INFO ─────────────────╮
+  │  Config already exists  │
+  ╰─────────────────────────╯
+        "
+        read -p "  Do you want to re-generate default config? [y/n] " ask
         case "${ask}" in
             y|Y )
-                printConfig
+                printConfig > "$config_file"
                 echo -e "
   ╭────────────────────────────────────────╮
   │  Default config has been re-generated  │
@@ -322,7 +331,7 @@ generateDefaultConfig() {
 }
 
 printLog() {
-    printf "**$(date +${COLOR_DARK_GRAY}%Y-%m-%d*${COLOR_RESET}%H:%M:%S)%-60s" "*${1}*" \
+    printf "**$(date +${COLOR_DARK_GRAY}%Y-%m-%d*${COLOR_RESET}%H:%M:%S)%-60s" "*${BLUE}${1}${GRAY}*" \
     | sed 's/ /./g' | sed 's/*/ /g'
     check
 }
@@ -346,7 +355,24 @@ getAllInit() {
     initVariable
 }
 
+dump() {
+    for((i=0; i <= 10; i++)); do
+        printLog "Screenshot-21-1-2_12-2-3.png"
+        printLog "Backup*original*photo"
+        printLog "Add*titlebar"
+        printLog "Add*rounded*corner"
+        printLog "Add*small*border"
+        printLog "Add*border*as*background"
+        printLog "Add*border*gradient*as*background"
+        printLog "Add*shadow*image"
+        printLog "Add*footer*image"
+        sleep 1s
+        echo ""
+    done
+}
+
 getAllInit
-printInfo
+# printInfo
 getDistro
-# generateDefaultConfig
+generateDefaultConfig
+dump
