@@ -8,9 +8,11 @@ install:
 	@mkdir -p $(DESTDIR)$(PREFIX)/bin
 	@mkdir -p $(DESTDIR)$(MANDIR)/man1
 	@cp -p awesomeshot $(DESTDIR)$(PREFIX)/bin/awesomeshot
+	@cp -R lib $(DESTDIR)$(PREFIX)/lib/awesomeshot
 	@cp -p awesomeshot.1 $(DESTDIR)$(MANDIR)/man1
 	@chmod 755 $(DESTDIR)$(PREFIX)/bin/awesomeshot
 
 uninstall:
 	@rm -rf $(DESTDIR)$(PREFIX)/bin/awesomeshot
+	@rm -rf $(DESTDIR)$(PREFIX)/lib/awesomeshot
 	@rm -rf $(DESTDIR)$(MANDIR)/man1/awesomeshot.1*

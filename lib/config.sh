@@ -1,27 +1,6 @@
-#!/usr/bin/env bash
-
-: '
-|--------------------------------------------------------------------------
-| Awesomeshot
-|--------------------------------------------------------------------------
-|
-| A command-line screenshot tool written in bash 5.1.16+.
-| https://github.com/mayTermux/awesomeshot
-| 
-| Copyright (c) 2021 - 2022 xShin
-|
-'
-
-version=1.2.0
-
-XDG_CONFIG_HOME=${XDG_CONFIG_HOME:-${HOME}/.config}
-config_file="${XDG_CONFIG_HOME}/awesomeshot/awesomeshot.conf"
-
-LC_ALL=C
-LANG=C
-
+#!/bin/bash
 read -rd "" config <<"EOF"
-:'
+<<''
 |--------------------------------------------------------------------------
 | Section: Relate to Image
 |--------------------------------------------------------------------------
@@ -32,13 +11,13 @@ read -rd "" config <<"EOF"
 |   - Backup original image (before edited)
 |   - Backup PATH
 |
-'
+
 screenshot_path="/sdcard/Pictures/ScreenMaster"
 convert_to_png="yes"
 backup="yes"
 path_backup="/sdcard/DCIM/awesomeshot"
 
-:'
+<<''
 |--------------------------------------------------------------------------
 | Section: Hex Color
 |--------------------------------------------------------------------------
@@ -46,7 +25,7 @@ path_backup="/sdcard/DCIM/awesomeshot"
 | In this section contains of Colors,
 | using array as the data type.
 |
-'
+
 hex_color=(
   "#F8F9FA" # white
   "#000000" # black
@@ -56,7 +35,6 @@ hex_color=(
   "#6D6B70" # another gray
   "#726A7B" # slate gray
   "#A2AAAD"
-
   # Color for gradient
   "#C850C0"
   "#FFCC70"
@@ -64,7 +42,7 @@ hex_color=(
   "#FE7FAA"
 )
 
-:'
+<<''
 |--------------------------------------------------------------------------
 | Section: ImageMagick Titlebar
 |--------------------------------------------------------------------------
@@ -81,9 +59,9 @@ hex_color=(
 |   - Text position
 |   - Font position (x, y)
 |
-'
+
 convert_titlebar="yes"
-add_on_img="yes"
+add_on_img=""
 width_titlebar=500
 height_titlebar=1000
 titlebar_color="${hex_color[2]}"
@@ -96,18 +74,18 @@ titlebar_text_background="none"
 titlebar_text_position="North"
 titlebar_text_xy="+0+7"
 
-:'
+<<''
 |--------------------------------------------------------------------------
 | Section: ImageMagick Rounded Corner
 |--------------------------------------------------------------------------
 |
 | In this section contains how many rounded corner of image
 |
-'
+
 convert_rounded="yes"
 border_radius=20
 
-:'
+<<''
 |--------------------------------------------------------------------------
 | Section: ImageMagick Small Border
 |--------------------------------------------------------------------------
@@ -116,12 +94,12 @@ border_radius=20
 |   - Color of border
 |   - Border size
 |
-'
+
 convert_small_border="yes"
 small_border_color="${hex_color[5]}"
 small_border_size=3
 
-:'
+<<''
 |--------------------------------------------------------------------------
 | Section: ImageMagick Border as Background of image
 |--------------------------------------------------------------------------
@@ -134,12 +112,12 @@ small_border_size=3
 |   - Color of border
 |   - Border size
 |
-'
+
 convert_background_border="yes"
 background_border_color="none"
 background_border_size=50
 
-:'
+<<''
 |--------------------------------------------------------------------------
 | Section: ImageMagick Border Gradient as Background of image
 |--------------------------------------------------------------------------
@@ -149,15 +127,15 @@ background_border_size=50
 |   - Interpolate method
 |   - Color Gradient
 |
-'
+
 convert_border_gradient="yes"
 interpolate_method="Saddle"
 gradient_color_top_left="${hex_color[8]}"
 gradient_color_top_right="${hex_color[9]}"
-gradient_color_bottom_right="${hex_color[10]}"
-gradient_color_bottom_left="${hex_color[8]}"
+gradient_color_bottom_right="${hex_color[8]}"
+gradient_color_bottom_left="${hex_color[10]}"
 
-:'
+<<''
 |--------------------------------------------------------------------------
 | Section: ImageMagick Shadow of image
 |--------------------------------------------------------------------------
@@ -166,12 +144,12 @@ gradient_color_bottom_left="${hex_color[8]}"
 |   - Shadow color
 |   - Shadow size
 |
-'
+
 convert_shadow="yes"
 shadow_color="${hex_color[1]}"
 shadow_size="75x30+0+30"
 
-:'
+<<''
 |--------------------------------------------------------------------------
 | Section: ImageMagick Footer of image
 |--------------------------------------------------------------------------
@@ -185,7 +163,7 @@ shadow_size="75x30+0+30"
 |   - Footer position
 |   - Footer position (x, y)
 |
-'
+
 convert_footer=""
 footer_text=" Shot by Awesomeshot"
 footer_font="JetBrains-Mono-Medium-Nerd-Font-Complete"
@@ -195,111 +173,47 @@ footer_background="none"
 footer_position="South"
 footer_xy="+0+45"
 
-:'
+<<''
 |--------------------------------------------------------------------------
 | Section: Open the image when finished editing
 |--------------------------------------------------------------------------
 |
-'
+
 open_image=""
 EOF
 
-initColor() {
-    COLOR_BASED="\e[39m"
-    COLOR_DANGER="\e[91m"
-    COLOR_WARNING="\e[93m"
-    COLOR_SUCCESS="\e[92m"
-    COLOR_SKY="\e[34m"
-
-    COLOR_DEFAULT="\e[39m"
-    COLOR_RESET="\033[0m"
-
-    COLOR_WHITE="\e[97m"
-    COLOR_BLACK="\e[30m"
-
-    COLOR_RED="\e[31m"
-    COLOR_GREEN="\e[32m"
-    COLOR_YELLOW="\e[33m"
-    COLOR_BLUE="\e[34m"
-    COLOR_MAGENTA="\e[35m"
-    COLOR_CYAN="\e[36m"
-
-    COLOR_LIGHT_GRAY="\e[37m"
-    COLOR_DARK_GRAY="\e[90m"
-    COLOR_LIGHT_RED="\e[91m"
-    COLOR_LIGHT_GREEN="\e[92m"
-    COLOR_LIGHT_YELLOW="\e[93m"
-    COLOR_LIGHT_BLUE="\e[94m"
-    COLOR_LIGHT_MAGENTA="\e[95m"
-    COLOR_LIGHT_CYAN="\e[96m"
-
-    COLOR_BOLD_MAGENTA="\033[1;35m"
-    COLOR_BOLD_GREEN="\033[1;32m"
-    COLOR_BOLD_WHITE="\033[1;37m"
-    COLOR_BOLD_BLUE="\033[1;34m"
-    COLOR_BOLD_RED="\033[1;31m"
-    COLOR_BOLD_YELLOW="\033[1;33m"
-    COLOR_BOLD_CYAN="\033[1;36m"
-
-    COLOR_BACKGROUND_YELLOW="\033[1;43;33m"
-    COLOR_BACKGROUND_BLUE="\033[1;44;97m"
-    COLOR_BACKGROUND_RED="\033[1;41;97m"
-    COLOR_BACKGROUND_WHITE="\033[1;47;37m"
-    COLOR_BACKGROUND_BLACK="\033[1;40;30m"
-
-    BLUE=$(tput setaf 4)
-    GRAY=$(tput setaf 236)
-    RESET=$(tput sgr0)
-}
-
-printInfo() {
-    echo -e "\n  ${COLOR_BACKGROUND_BLUE} INFO ${COLOR_RESET} Awesomeshot running on listening mode."
-
-echo -e "
-  ╭────────────────────────────╮
-  │  ⚠ Press ${COLOR_BACKGROUND_RED} CTRL+C ${COLOR_RESET} to stop  │
-  ╰────────────────────────────╯
-"
-}
-
-initVariable() {
-    distro=""
-}
-
-getDistro() {
-    _cmd=$(uname -n)
-    if [ $_cmd != "localhost" ]; then
-        distro=$(uname)
-    elif [[ -d /system/app/ && -d /system/priv-app ]]; then
-        distro="Android"
-    fi
-}
+XDG_CONFIG_HOME=${XDG_CONFIG_HOME:-${HOME}/.config}
+config_file="${XDG_CONFIG_HOME}/awesomeshot/awesomeshot.conf"
 
 loadConfig() {
-    source "${config_file}"
+    source ${config_file}
 }
 
 printConfig() {
-    printf '%s\n' "$config"
+    printf '%s\n' "${config}"
+}
+
+createDirectory() {
+    mkdir -p "${XDG_CONFIG_HOME}/awesomeshot/" 2> /dev/null
 }
 
 getUserConfig() {
-    if [ -f "${config_file}" ]; then
+    if [[ -f ${config_file} ]]; then
         loadConfig
-    elif [ ! -f "${config_file}" ]; then
-        mkdir -p "${XDG_CONFIG_HOME}/awesomeshot/" 2> /dev/null
-        printConfig > "$config_file"
+    else
+        createDirectory
+        printConfig > "${config_file}"
         loadConfig
     fi
 }
 
 generateDefaultConfig() {
-    if [ ! -f "${config_file}" ]; then
-        if [ ! -d "${XDG_CONFIG_HOME}/awesomeshot" ]; then
-            mkdir -p "${XDG_CONFIG_HOME}/awesomeshot/" 2> /dev/null
+    if [[ ! -f ${config_file} ]]; then
+        if [[ ! -d "${XDG_CONFIG_HOME}/awesomeshot" ]]; then
+            createDirectory
         fi
-        printConfig > "$config_file"
-        echo -e "\n${COLOR_BACKGROUND_BLUE} INFO ${COLOR_RESET}"
+        printConfig > "${config_file}"
+        echo -e "\n  ${COLOR_BACKGROUND_BLUE} INFO ${COLOR_RESET}"
         echo -e "
   ╭─────────────────────────────────────╮
   │  Default config has been generated  │
@@ -308,14 +222,23 @@ generateDefaultConfig() {
         exit
     fi
 
-    if [ -f "${config_file}" ]; then
+    if [[ -f ${config_file} ]]; then
+        echo -e "\n  ${COLOR_BACKGROUND_BLUE} INFO ${COLOR_RESET}"
         echo -e "
-  ╭── INFO ─────────────────╮
+  ╭─────────────────────────╮
   │  Config already exists  │
   ╰─────────────────────────╯
         "
         read -p "  Do you want to re-generate default config? [y/n] " ask
         case "${ask}" in
+
+            "" )
+                echo -e "
+  ╭────────────────╮
+  │  Nothing todo  │
+  ╰────────────────╯"
+            ;;
+
             y|Y )
                 printConfig > "$config_file"
                 echo -e "
@@ -323,56 +246,14 @@ generateDefaultConfig() {
   │  Default config has been re-generated  │
   ╰────────────────────────────────────────╯"
             ;;
+
             n|N )
                 exit
+            ;;
+
+            * )
+                logError "error" "Uknown Answer '${ask}'" "" "Please input the correct answer"
             ;;
         esac
     fi
 }
-
-printLog() {
-    printf "**$(date +${COLOR_DARK_GRAY}%Y-%m-%d*${COLOR_RESET}%H:%M:%S)%-60s" "*${BLUE}${1}${GRAY}*" \
-    | sed 's/ /./g' | sed 's/*/ /g'
-    check
-}
-
-function check() {
-  #   
-  #   
-  if [[ $? -eq 0 && ${PIPESTATUS[0]} -eq 0 ]]; then
-
-    echo -e " ${COLOR_SUCCESS}${COLOR_DEFAULT} "
-
-  else
-
-    echo -e " ${COLOR_DANGER}${COLOR_DEFAULT} "
-
-  fi
-}
-
-getAllInit() {
-    initColor
-    initVariable
-}
-
-dump() {
-    for((i=0; i <= 10; i++)); do
-        printLog "Screenshot-21-1-2_12-2-3.png"
-        printLog "Backup*original*photo"
-        printLog "Add*titlebar"
-        printLog "Add*rounded*corner"
-        printLog "Add*small*border"
-        printLog "Add*border*as*background"
-        printLog "Add*border*gradient*as*background"
-        printLog "Add*shadow*image"
-        printLog "Add*footer*image"
-        sleep 1s
-        echo ""
-    done
-}
-
-getAllInit
-printInfo
-getDistro
-# generateDefaultConfig
-dump
