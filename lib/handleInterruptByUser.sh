@@ -1,10 +1,10 @@
 handleInterruptByUser() {
 
-  logError "error" "" "" "${1}"
+  logError "\n\n  error" "${1}" "" "Press any key to exit"
 
-  setterm -cursor on
+  setCursor on
 
-  read -n 1 -s -r -p "   Press any key to exit "
+  read -n 1 -s -r -p ""
 
   exit 1
 
