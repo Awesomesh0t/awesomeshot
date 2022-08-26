@@ -1,7 +1,6 @@
 backupOriginalPhoto() {
   # change_filename_backup=$(echo $1 | sed 's/.png/_backup.png/g')
   # get_filename_suffix=${change_filename_backup##*/}
-  sleep 2s
   file_name_backup=${file_name##*/}
 
   log "Backup*original*photo"

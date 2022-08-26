@@ -91,6 +91,8 @@ autoRun() {
           file_name="${screenshot_path}/${get_file_name}"
         fi
 
+        sleep 1.5s
+
         run
 
         if [ "${open_image}" == "yes" ]; then
