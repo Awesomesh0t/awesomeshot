@@ -2,27 +2,27 @@ convertBorder() {
     case "${1}" in
         "small"|"Small" )
             log "Add*small*border"
-            convert "$file_name" -bordercolor "${small_border_color}" -border ${small_border_size} "$file_name"
+            convert "${full_file_name}" -bordercolor "${small_border_color}" -border ${small_border_size} "${full_file_name}"
             check
             convertRounded "to*small*border"
         ;;
 
         "background"|"Background" )
             log "Add*border*as*background"
-            convert "$file_name" -bordercolor "${background_border_color}" -border ${background_border_size} "$file_name"
+            convert "${full_file_name}" -bordercolor "${background_border_color}" -border ${background_border_size} "${full_file_name}"
             check
         ;;
     esac
 }
 
 convertBorderGradient() {
-    size_wh=$(identify -format %wx%h $file_name)
+    size_wh=$(identify -format %wx%h ${full_file_name})
     case "${1}" in
         "saddle"|"Saddle" )
             log "Add*border*gradient*${interpolate_method}*as*background"
 
             convert \
-            "$file_name" \
+            "${full_file_name}" \
             \( \
             \( \
                 xc:${gradient_color_top_left} xc:${gradient_color_top_right} +append \
@@ -34,14 +34,14 @@ convertBorderGradient() {
             \) \
             -gravity center \
             -compose Dst_Over -composite \
-            "$file_name"
+            "${full_file_name}"
         ;;
 
         "mesh"|"Mesh" )
             log "Add*border*gradient*${interpolate_method}*as*background"
 
             convert \
-            "$file_name" \
+            "${full_file_name}" \
             \( \
             \( \
                 xc:${gradient_color_top_left} xc:${gradient_color_top_right} +append \
@@ -53,7 +53,7 @@ convertBorderGradient() {
             \) \
             -gravity center \
             -compose Dst_Over -composite \
-            "$file_name"
+            "${full_file_name}"
         ;;
     esac
 

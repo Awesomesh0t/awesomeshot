@@ -1,7 +1,7 @@
 convertShadow() {
   log "Add*shadow*image"
 
-  convert "$file_name" \
+  convert "${full_file_name}" \
     \( \
       +clone \
       -background "${shadow_color}" \
@@ -10,7 +10,7 @@ convertShadow() {
     +swap \
     -background none \
     -layers merge \
-    +repage "$file_name"
+    +repage "${full_file_name}"
     
   check
 }

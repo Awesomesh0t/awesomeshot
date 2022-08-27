@@ -12,10 +12,17 @@ read -rd "" config <<"EOF"
 |   - Backup PATH
 |
 
-screenshot_path="/sdcard/Pictures/ScreenMaster"
+screenshot_path="${HOME}/Pictures/Awesomeshot"
+if [[ ${full_name} == "yes" ]]; then
+    file_name_running="Screenshot_`date "+%Y-%m-%d_%H-%M-%S"`.png"
+    full_file_name="${screenshot_path}/${file_name_running}"
+else
+    file_name_running="${file_name##*/}"
+    full_file_name="${file_name}"
+fi
 convert_to_png="yes"
 backup="yes"
-path_backup="/sdcard/DCIM/awesomeshot"
+path_backup="${screenshot_path}/Backup"
 
 <<''
 |--------------------------------------------------------------------------
