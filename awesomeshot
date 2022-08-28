@@ -8,7 +8,7 @@ config_file="${XDG_CONFIG_HOME}/awesomeshot/awesomeshot.conf"
 LC_ALL=C
 LANG=C
 
-LIBRARY_PATH="/usr/local/lib/awesomeshot"
+LIBRARY_PATH=""
 LIBRARYS=(
     alert backupOriginalPhoto check checkConfig colors
     config convertBackground convertFooter
