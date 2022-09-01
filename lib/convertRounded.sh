@@ -1,4 +1,5 @@
 convertRounded() {
+  setTime start
   log "Add*rounded*corner*${1}"
 
   convert "$file_name" \
@@ -8,5 +9,7 @@ convertRounded() {
       \( +clone -flop \) -compose Multiply -composite \
     \) \
     -alpha off -compose CopyOpacity -composite "$file_name"
+  setTime stop
+  getTime
   check
 }
