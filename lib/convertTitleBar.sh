@@ -1,4 +1,5 @@
 convertTitleBar(){
+  setTime start
   log "Add*titlebar"
 
   g="#27C93F" #green
@@ -58,5 +59,8 @@ convertTitleBarText() {
     -font "${titlebar_text_font}" \
     -annotate "${titlebar_text_xy}" \
     @- "${full_file_name}"
+
+  setTime stop
+  getTime
   check
 }

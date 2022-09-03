@@ -1,4 +1,5 @@
 convertFooter() {
+  setTime start
   log "Add*footer*image"
 
   echo -n "${footer_text}" |
@@ -11,5 +12,7 @@ convertFooter() {
     -annotate ${footer_xy} \
     @- "${full_file_name}"
     
+  setTime stop
+  getTime
   check
 }

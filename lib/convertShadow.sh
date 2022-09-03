@@ -1,4 +1,5 @@
 convertShadow() {
+  setTime start
   log "Add*shadow*image"
 
   convert "${full_file_name}" \
@@ -12,5 +13,7 @@ convertShadow() {
     -layers merge \
     +repage "${full_file_name}"
     
+  setTime stop
+  getTime
   check
 }
