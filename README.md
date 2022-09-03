@@ -109,7 +109,7 @@ https://user-images.githubusercontent.com/64394320/188277211-e4414d4e-e412-400e-
 
 ## How awesomeshot work?
 
-- [https://github.com/Awesomesh0t/awesomeshot/issues/2#issuecomment-1052047095](https://github.com/Awesomesh0t/awesomeshot/issues/2#issuecomment-1052047095)
+- [How do i actually use this?](https://github.com/Awesomesh0t/awesomeshot/issues/2#issuecomment-1052047095)
 
 ## Showcase
 
