@@ -212,6 +212,7 @@ getUserConfig() {
         printConfig > "${config_file}"
         loadConfig
     fi
+    checkConfig
 }
 
 generateDefaultConfig() {
