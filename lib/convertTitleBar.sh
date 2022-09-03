@@ -44,10 +44,13 @@ convertTitleBar(){
       fill ${g}   circle ${arr[2,0]},${arr[2,1]} ${arr[2,2]},${arr[2,3]}" \
       ${full_file_name}
   fi
+  setTime stop
+  getTime
   check
 }
 
 convertTitleBarText() {
+  setTime start
   log "Add*titlebar*text"
 
   echo -n "${titlebar_text}" |
