@@ -101,6 +101,12 @@ make uninstall
 - [Wiki](https://github.com/Awesomesh0t/awesomeshot/wiki)
 - [Customizing Config File](https://github.com/Awesomesh0t/awesomeshot/wiki/Customizing-Config-File)
 
+## Preview
+
+- Linux
+
+https://user-images.githubusercontent.com/64394320/188277211-e4414d4e-e412-400e-8364-4162ca345d09.mp4
+
 ## How awesomeshot work?
 
 - [https://github.com/Awesomesh0t/awesomeshot/issues/2#issuecomment-1052047095](https://github.com/Awesomesh0t/awesomeshot/issues/2#issuecomment-1052047095)
