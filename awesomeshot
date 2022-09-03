@@ -115,13 +115,18 @@ manualRun() {
   ╰────────────────────────────╯
   "
 
+  setTime start
   log "Set*status*file"
   if [[ -f ${file_name} ]]; then
+    setTime stop
+    getTime
     check
     run
     setCursor on
     [[ "${open_image}" == "yes" ]] && termux-open "${file_name}"
   else
+    setTime stop
+    getTime
     check
     logError "\n\n  error" "file not found" "'${file_name}'" "please enter the correct path"
     setCursor on
