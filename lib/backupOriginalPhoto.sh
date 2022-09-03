@@ -1,4 +1,5 @@
 backupOriginalPhoto() {
+  setTime start
   # change_filename_backup=$(echo $1 | sed 's/.png/_backup.png/g')
   # get_filename_suffix=${change_filename_backup##*/}
   file_name_backup=${file_name##*/}
@@ -12,10 +13,14 @@ backupOriginalPhoto() {
 
   if [ -f ${path_backup}/${file_name_backup} ]; then
 
+    setTime stop
+    getTime
     check
 
   else
 
+    setTime stop
+    getTime
     check
 
   fi

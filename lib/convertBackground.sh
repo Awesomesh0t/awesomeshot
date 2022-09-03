@@ -1,21 +1,28 @@
 convertBorder() {
     case "${1}" in
         "small"|"Small" )
+            setTime start
             log "Add*small*border"
             convert "$file_name" -bordercolor "${small_border_color}" -border ${small_border_size} "$file_name"
+            setTime stop
+            getTime
             check
             convertRounded "to*small*border"
         ;;
 
         "background"|"Background" )
+            setTime start
             log "Add*border*as*background"
             convert "$file_name" -bordercolor "${background_border_color}" -border ${background_border_size} "$file_name"
+            setTime stop
+            getTime
             check
         ;;
     esac
 }
 
 convertBorderGradient() {
+    setTime start
     size_wh=$(identify -format %wx%h $file_name)
     case "${1}" in
         "saddle"|"Saddle" )
@@ -57,5 +64,7 @@ convertBorderGradient() {
         ;;
     esac
 
+    setTime stop
+    getTime
     check
 }
