@@ -110,6 +110,7 @@ https://user-images.githubusercontent.com/64394320/188277211-e4414d4e-e412-400e-
 - Proot Distro Termux
 
 > In this option, idk why `flameshot gui --raw` can't be run and i change to use `scrot -F` command
+> ![image](https://user-images.githubusercontent.com/64394320/189495515-27430ac3-9bc7-441f-be6b-fed58c2acc32.png)
 
 https://user-images.githubusercontent.com/64394320/189495213-c102c789-bae9-439e-887c-bd09b822f09b.mp4
 
