@@ -18,7 +18,7 @@ Awesomeshot is command-line screenshot tool written in bash 5.1.16+. Awesomeshot
 ### Packages
 
 ```bash
-sudo pacman -S imagemagick flameshot dunst bc make
+sudo pacman -S imagemagick flameshot dunst xclip bc make
 ```
 
 </details>
