@@ -107,6 +107,10 @@ make uninstall
 
 https://user-images.githubusercontent.com/64394320/188277211-e4414d4e-e412-400e-8364-4162ca345d09.mp4
 
+- Proot Distro Termux
+
+https://user-images.githubusercontent.com/64394320/189495213-c102c789-bae9-439e-887c-bd09b822f09b.mp4
+
 ## How awesomeshot work?
 
 - [How do i actually use this?](https://github.com/Awesomesh0t/awesomeshot/issues/2#issuecomment-1052047095)
