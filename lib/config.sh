@@ -69,13 +69,13 @@ hex_color=(
 
 convert_titlebar="yes"
 add_on_img=""
-width_titlebar=500
-height_titlebar=1000
+width_titlebar=300
+height_titlebar=800
 titlebar_color="${hex_color[2]}"
 convert_titlebar_text="yes"
 titlebar_text="Awesomeshot"
 titlebar_text_font="Falling-Sky"
-titlebar_text_size=30
+titlebar_text_size=19
 titlebar_text_color="${hex_color[5]}"
 titlebar_text_background="none"
 titlebar_text_position="North"
