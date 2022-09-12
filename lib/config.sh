@@ -79,7 +79,7 @@ titlebar_text_size=19
 titlebar_text_color="${hex_color[5]}"
 titlebar_text_background="none"
 titlebar_text_position="North"
-titlebar_text_xy="+0+7"
+titlebar_text_xy="+0+2"
 
 <<''
 |--------------------------------------------------------------------------
