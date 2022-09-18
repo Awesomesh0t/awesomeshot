@@ -1,3 +1,5 @@
+#!/bin/bash
+
 setCursor() {
-    setterm -cursor ${1}
+    setterm -cursor "${1}"
 }

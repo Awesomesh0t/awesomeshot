@@ -1,5 +1,7 @@
+#!/bin/bash
+
 help() {
-  echo -e "
+    echo -e "
   $(version)
   A command-line screenshot tool written in bash 5.1.16+
 
@@ -26,7 +28,7 @@ help() {
                               Convert to PNG if file not PNG
 
     backup                    This variable serves to function to backup original photo
-                              (screenshot result), change this value to blank or whatever for disable 
+                              (screenshot result), change this value to blank or whatever for disable
                               function and 'yes' for enable function
 
     path_backup               This variable serves to set the original photo backup PATH
@@ -81,7 +83,7 @@ help() {
                               change this value with hex color or use the one in the array list.
 
     titlebar_text_font        This variable serves to set the font used when converting, you can check the list font
-                              available to use for ImageMagick by command: 
+                              available to use for ImageMagick by command:
                               magick convert -list font | grep -iE 'font:.*'
 
     titlebar_text_xy          This variable serves to set position of "X" and "Y" titlebar text
@@ -154,7 +156,7 @@ help() {
     footer_xy                 This variable serves to set position of 'X' and 'Y'
 
     footer_font               This variable serves to set the font used when converting, you can check the list font
-                              available to use for ImageMagick by command: 
+                              available to use for ImageMagick by command:
                               magick convert -list font | grep -iE 'font:.*'
 
     footer_font_size          This variable serves to set font size
@@ -168,5 +170,5 @@ help() {
 
     open_image                This variable serves to open the result of image (when editing finished), change this value
                               to blank or whatever for disable function and 'yes' for enable function.
-  "
+    "
 }

@@ -4,6 +4,7 @@ version=1.2.0
 
 XDG_CONFIG_HOME=${XDG_CONFIG_HOME:-${HOME}/.config}
 config_file="${XDG_CONFIG_HOME}/awesomeshot/awesomeshot.conf"
+export config_file
 
 LC_ALL=C
 LANG=C
@@ -23,102 +24,103 @@ done
 file_name=""
 
 run() {
-  if [ "${convert_to_png}" == "yes" ]; then
-    convertToPng
-  fi
-
-  if [ "${backup}" == "yes" ]; then
-    # backupOriginalPhoto "${file_name}"
-    backupOriginalPhoto
-  fi
-    
-  if [ "${convert_titlebar}" == "yes" ]; then
-    convertTitleBar
-    if [ "${convert_titlebar_text}" == "yes" ]; then
-      convertTitleBarText
+    if [ "${convert_to_png}" == "yes" ]; then
+        convertToPng
     fi
-  fi
-
-  if [ "${convert_rounded}" == "yes" ]; then
-    convertRounded "to*photo"
-  fi
-
-  if [ "${convert_small_border}" == "yes" ]; then
-    convertBorder "small"
-  fi
-
-  if [ "${convert_shadow}" == "yes" ]; then
-    convertShadow
-  fi
-
-  if [ "${convert_background_border}" == "yes" ]; then
-    convertBorder "background"
-  fi
-
-  if [ "${convert_border_gradient}" == "yes" ]; then
-    convertBorderGradient "${interpolate_method}"
-  fi
-
-  if [ "${convert_footer}" == "yes" ]; then
-    convertFooter
-  fi
-
-  notify
-  xclip -selection clipboard -i ${full_file_name} -t image/png
+    
+    if [ "${backup}" == "yes" ]; then
+        # backupOriginalPhoto "${file_name}"
+        backupOriginalPhoto
+    fi
+    
+    if [ "${convert_titlebar}" == "yes" ]; then
+        convertTitleBar
+        if [ "${convert_titlebar_text}" == "yes" ]; then
+            convertTitleBarText
+        fi
+    fi
+    
+    if [ "${convert_rounded}" == "yes" ]; then
+        convertRounded "to*photo"
+    fi
+    
+    if [ "${convert_small_border}" == "yes" ]; then
+        convertBorder "small"
+    fi
+    
+    if [ "${convert_shadow}" == "yes" ]; then
+        convertShadow
+    fi
+    
+    if [ "${convert_background_border}" == "yes" ]; then
+        convertBorder "background"
+    fi
+    
+    if [ "${convert_border_gradient}" == "yes" ]; then
+        convertBorderGradient "${interpolate_method}"
+    fi
+    
+    if [ "${convert_footer}" == "yes" ]; then
+        convertFooter
+    fi
+    
+    notify
+    xclip -selection clipboard -i ${full_file_name} -t image/png
 }
 
 runProgram() {
-  getUserConfig
-
-  echo -e "\n  ${COLOR_BACKGROUND_BLUE} INFO ${COLOR_RESET} Awesomeshot running on autorun, waiting to take screenshot."
-
-  echo -e "
+    getUserConfig
+    
+    echo -e "\n  ${COLOR_BACKGROUND_BLUE} INFO ${COLOR_RESET} Awesomeshot running on autorun, waiting to take screenshot."
+    
+    echo -e "
   ╭────────────────────────────╮
   │  ⚠ Press ${COLOR_BACKGROUND_RED} CTRL+C ${COLOR_RESET} to stop  │
   ╰────────────────────────────╯
-  "
-
-  [[ ! -d ${screenshot_path} ]] && mkdir -p ${screenshot_path} 2> /dev/null
-
-  flameshot gui --raw > ${full_file_name}
-  run
-  setCursor on
+    "
+    
+    [[ ! -d ${screenshot_path} ]] && mkdir -p "${screenshot_path}" 2> /dev/null
+    
+    flameshot gui --raw > "${full_file_name}"
+    run
+    setCursor on
 }
 
 manualRun() {
-  getUserConfig
-
-  echo -e "\n  ${COLOR_BACKGROUND_BLUE} INFO ${COLOR_RESET} Awesomeshot running on manualrun"
-
-  echo -e "
+    getUserConfig
+    
+    echo -e "\n  ${COLOR_BACKGROUND_BLUE} INFO ${COLOR_RESET} Awesomeshot running on manualrun"
+    
+    echo -e "
   ╭────────────────────────────╮
   │  ⚠ Press ${COLOR_BACKGROUND_RED} CTRL+C ${COLOR_RESET} to stop  │
   ╰────────────────────────────╯
-  "
-
-  setTime start
-  log "Set*status*file"
-  if [[ -f ${file_name} ]]; then
-    setTime stop
-    getTime
-    check
-    run
-    setCursor on
-  else
-    setTime stop
-    getTime
-    check
-    logError "\n\n  error" "file not found" "'${file_name}'" "please enter the correct path"
-    setCursor on
-  fi
-
+    "
+    
+    setTime start
+    log "Set*status*file"
+    if [[ -f ${file_name} ]]; then
+        setTime stop
+        getTime
+        check
+        run
+        setCursor on
+    else
+        setTime stop
+        getTime
+        check
+        logError "\n\n  error" "file not found" "'${file_name}'" "please enter the correct path"
+        setCursor on
+    fi
+    
 }
 
 main() {
-  trap "handleInterruptByUser 'Interrupt By User'" 2
-  setCursor off
-  [[ ${1} == "runProgram" ]] && full_name="yes" || full_name=""
-  ${1} ${2}
+    trap "handleInterruptByUser 'Interrupt By User'" 2
+    setCursor off
+    [[ ${1} == "runProgram" ]] && full_name="yes" || full_name=""
+    ${1} "${2}"
+    setCursor on
 }
 
 version() {
@@ -126,28 +128,28 @@ version() {
 }
 
 case "${1}" in
-  -r|--run )
-    main runProgram
-  ;;
-  -c|--config )
-    generateDefaultConfig
-  ;;
-  -m|--manual )
-    if [ ${2} ]; then
-      file_name="${2}"
-      main manualRun
-    else
-      logError "error" "This option require filename"
-      exit 1
-    fi
-  ;;
-  -h|--help )
-    help
-  ;;
-  -v|--version )
-    version
-  ;;
-  *)
-    help
-  ;;
+    -r|--run )
+        main runProgram
+    ;;
+    -c|--config )
+        generateDefaultConfig
+    ;;
+    -m|--manual )
+        if [ "${2}" ]; then
+            file_name="${2}"
+            main manualRun
+        else
+            logError "error" "This option require filename"
+            exit 1
+        fi
+    ;;
+    -h|--help )
+        help
+    ;;
+    -v|--version )
+        version
+    ;;
+    *)
+        help
+    ;;
 esac
