@@ -114,19 +114,26 @@ make uninstall
 
 ## Preview
 
-- Linux
+- Arch Linux
 
 https://user-images.githubusercontent.com/64394320/188277211-e4414d4e-e412-400e-8364-4162ca345d09.mp4
 
 > For awesomeshot can run without terminal, i just made a shortcut
-> ![image](https://user-images.githubusercontent.com/64394320/189496189-0d0fbc51-91f4-4673-85ac-87fc5bc799b2.png)
+> ![Arch Linux](https://user-images.githubusercontent.com/64394320/189496189-0d0fbc51-91f4-4673-85ac-87fc5bc799b2.png)
+
+- Ubuntu
+
+https://user-images.githubusercontent.com/64394320/190963371-675e4df6-b4ce-4fd4-980e-d40134bfa6e8.mp4
+
+> In this option, flameshot not work at wayland (Ubuntu 22.04 Using Wayland) and i change to use `gnome-screenshot --area -f` command
+> ![Ubuntu](https://user-images.githubusercontent.com/64394320/190963341-3dd96a9d-e227-4b6b-8bcb-7e9c17fb6c39.png)
 
 - Proot Distro Termux
 
 https://user-images.githubusercontent.com/64394320/189495213-c102c789-bae9-439e-887c-bd09b822f09b.mp4
 
 > In this option, idk why `flameshot gui --raw` can't be run and i change to use `scrot -F` command
-> ![image](https://user-images.githubusercontent.com/64394320/189495515-27430ac3-9bc7-441f-be6b-fed58c2acc32.png)
+> ![Termux Proot Distro](https://user-images.githubusercontent.com/64394320/189495515-27430ac3-9bc7-441f-be6b-fed58c2acc32.png)
 
 ## How awesomeshot work?
 
