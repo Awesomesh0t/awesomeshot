@@ -24,6 +24,17 @@ sudo pacman -S imagemagick flameshot dunst xclip bc make
 </details>
 
 <details>
+<summary>Ubuntu</summary>
+
+### Packages
+
+```bash
+sudo apt install imagemagick flameshot dunst xclip bc make
+```
+
+</details>
+
+<details>
 <summary>Termux</summary>
 
 ### Application
@@ -45,7 +56,7 @@ pkg i -y termux-api imagemagick inotify-tools bc make
 ## Installation
 
 <details>
-<summary>Arch Linux</summary>
+<summary>Linux</summary>
 
 ### Download or Clone
 
