@@ -1,4 +1,5 @@
 #!/bin/bash
+
 read -rd "" config <<"EOF"
 <<''
 |--------------------------------------------------------------------------
@@ -122,14 +123,14 @@ small_border_size=3
 
 convert_background_border="yes"
 background_border_color="none"
-background_border_size=50
+background_border_size=15
 
 <<''
 |--------------------------------------------------------------------------
 | Section: ImageMagick Border Gradient as Background of image
 |--------------------------------------------------------------------------
 |
-| In this section contains how the border gradient is applied as background, 
+| In this section contains how the border gradient is applied as background,
 | such as:
 |   - Interpolate method
 |   - Color Gradient
@@ -193,7 +194,7 @@ XDG_CONFIG_HOME=${XDG_CONFIG_HOME:-${HOME}/.config}
 config_file="${XDG_CONFIG_HOME}/awesomeshot/awesomeshot.conf"
 
 loadConfig() {
-    source ${config_file}
+    source "${config_file}"
 }
 
 printConfig() {
@@ -229,7 +230,7 @@ generateDefaultConfig() {
         "
         exit
     fi
-
+    
     if [[ -f ${config_file} ]]; then
         echo -e "\n  ${COLOR_BACKGROUND_BLUE} INFO ${COLOR_RESET}"
         echo -e "
@@ -239,26 +240,28 @@ generateDefaultConfig() {
         "
         read -p "  Do you want to re-generate default config? [y/n] " ask
         case "${ask}" in
-
+            
             "" )
                 echo -e "
   ╭────────────────╮
   │  Nothing todo  │
-  ╰────────────────╯"
+  ╰────────────────╯
+                "
             ;;
-
+            
             y|Y )
                 printConfig > "$config_file"
                 echo -e "
   ╭────────────────────────────────────────╮
   │  Default config has been re-generated  │
-  ╰────────────────────────────────────────╯"
+  ╰────────────────────────────────────────╯
+                "
             ;;
-
+            
             n|N )
                 exit
             ;;
-
+            
             * )
                 logError "error" "Uknown Answer '${ask}'" "" "Please input the correct answer"
             ;;
