@@ -28,7 +28,7 @@ convertTitleBar(){
     #1520x720
     #760x360
     if [[ "${add_on_img}" == "yes" ]]; then
-        magick "${full_file_name}" -fill $b \
+        convert "${full_file_name}" -fill $b \
         -background "${titlebar_color}" \
         -gravity north \
         -chop 0x"$br" \
@@ -38,7 +38,7 @@ convertTitleBar(){
         fill ${g}   circle ${arr[2,0]},${arr[2,1]} ${arr[2,2]},${arr[2,3]}" \
         "${full_file_name}"
     else
-        magick "${full_file_name}" -fill $b \
+        convert "${full_file_name}" -fill $b \
         -background "${titlebar_color}" \
         -gravity north -splice 0x"$br"\
         -draw "fill ${r}   circle ${arr[0,0]},${arr[0,1]} ${arr[0,2]},${arr[0,3]}
