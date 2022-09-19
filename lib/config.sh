@@ -123,7 +123,7 @@ small_border_size=3
 
 convert_background_border="yes"
 background_border_color="none"
-background_border_size=50
+background_border_size=15
 
 <<''
 |--------------------------------------------------------------------------
