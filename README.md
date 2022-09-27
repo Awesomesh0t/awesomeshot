@@ -123,7 +123,7 @@ https://user-images.githubusercontent.com/64394320/188277211-e4414d4e-e412-400e-
 
 - Ubuntu
 
-https://user-images.githubusercontent.com/64394320/190963371-675e4df6-b4ce-4fd4-980e-d40134bfa6e8.mp4
+https://user-images.githubusercontent.com/64394320/192626023-8c2612f2-0c19-4fae-afe0-bc084f355587.mp4
 
 > In this option, flameshot not work at wayland (Ubuntu 22.04 Using Wayland) and i change to use `gnome-screenshot --area -f` command
 > ![Ubuntu](https://user-images.githubusercontent.com/64394320/190963341-3dd96a9d-e227-4b6b-8bcb-7e9c17fb6c39.png)
