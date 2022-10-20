@@ -17,7 +17,7 @@ LIBRARYS=(
     convertToPng cursor handleInterruptByUser help icons notify
 )
 
-for LIBRARY in ${LIBRARYS[@]}; do
+for LIBRARY in "${LIBRARYS[@]}"; do
     source ${LIBRARY_PATH}/${LIBRARY}.sh
 done
 
@@ -65,7 +65,11 @@ run() {
     fi
     
     notify
+    
+    [ "${open_image}" == "yes" ] && eog "${full_file_name}" &
+    
     xclip -selection clipboard -i ${full_file_name} -t image/png
+    setCursor on
 }
 
 runProgram() {
@@ -83,7 +87,6 @@ runProgram() {
     
     flameshot gui --raw > "${full_file_name}"
     run
-    setCursor on
 }
 
 manualRun() {
