@@ -48,7 +48,7 @@ sudo apt install imagemagick flameshot dunst xclip bc make
 ### Packages
 
 ```bash
-pkg i -y termux-api imagemagick inotify-tools bc make
+pkg i -y termux-api imagemagick inotify-tools bc make ncurses-utils
 ```
 
 </details>
@@ -99,13 +99,27 @@ make install
 
 ## Uninstallation
 
+<details>
+<summary>Linux</summary>
+
+> Run `sudo make uninstall` inside the script directory to uninstall the script.
+
+```bash
+sudo make uninstall
+```
+
+</details>
+
+<details>
+<summary>Termux</summary>
+
 > Run `make uninstall` inside the script directory to uninstall the script.
->
-> _NOTE_: for linux user need `sudo` command
 
 ```bash
 make uninstall
 ```
+
+</details>
 
 ## More:
 
@@ -114,28 +128,50 @@ make uninstall
 
 ## Preview
 
-- Arch Linux
+<details>
+<summary>Termux</summary>
+
+> In this video I'm using SSH from my laptop to remote Termux, so it can be use in my desktop terminal
+
+https://user-images.githubusercontent.com/64394320/196841144-907d873f-1168-4bcf-9f83-3a0b9571a9de.mp4
+
+> Result
+
+![result](https://user-images.githubusercontent.com/64394320/196842757-e9da87ad-e8b3-47a1-9c5f-cbb656a1256e.png)
+
+</details>
+
+<details>
+<summary>Arch Linux</summary>
 
 https://user-images.githubusercontent.com/64394320/188277211-e4414d4e-e412-400e-8364-4162ca345d09.mp4
 
 > For awesomeshot can run without terminal, i just made a shortcut
 > ![Arch Linux](https://user-images.githubusercontent.com/64394320/189496189-0d0fbc51-91f4-4673-85ac-87fc5bc799b2.png)
 
-- Ubuntu
+</details>
+
+<details>
+<summary>Ubuntu</summary>
 
 https://user-images.githubusercontent.com/64394320/192626023-8c2612f2-0c19-4fae-afe0-bc084f355587.mp4
 
 > In this option, flameshot not work at wayland (Ubuntu 22.04 Using Wayland) and i change to use `gnome-screenshot --area -f` command
 > ![Ubuntu](https://user-images.githubusercontent.com/64394320/190963341-3dd96a9d-e227-4b6b-8bcb-7e9c17fb6c39.png)
 
-- Proot Distro Termux
+</details>
+
+<details>
+<summary>Proot Distro Termux</summary>
 
 https://user-images.githubusercontent.com/64394320/189495213-c102c789-bae9-439e-887c-bd09b822f09b.mp4
 
 > In this option, idk why `flameshot gui --raw` can't be run and i change to use `scrot -F` command
 > ![Termux Proot Distro](https://user-images.githubusercontent.com/64394320/189495515-27430ac3-9bc7-441f-be6b-fed58c2acc32.png)
 
-## How awesomeshot work?
+</details>
+
+## How awesomeshot work on Termux?
 
 - [How do i actually use this?](https://github.com/Awesomesh0t/awesomeshot/issues/2#issuecomment-1052047095)
 
