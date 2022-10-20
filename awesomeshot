@@ -17,55 +17,29 @@ LIBRARYS=(
     convertToPng cursor handleInterruptByUser help icons notify
 )
 
-for LIBRARY in ${LIBRARYS[@]}; do
+for LIBRARY in "${LIBRARYS[@]}"; do
     source ${LIBRARY_PATH}/${LIBRARY}.sh
 done
 
 file_name=""
 
 run() {
-    if [ "${convert_to_png}" == "yes" ]; then
-        convertToPng
-    fi
-    
-    if [ "${backup}" == "yes" ]; then
-        # backupOriginalPhoto "${file_name}"
-        backupOriginalPhoto
-    fi
-    
+    [ "${convert_to_png}" == "yes" ] && convertToPng
+    [ "${backup}" == "yes" ] && backupOriginalPhoto
     if [ "${convert_titlebar}" == "yes" ]; then
         convertTitleBar
-        if [ "${convert_titlebar_text}" == "yes" ]; then
-            convertTitleBarText
-        fi
+        [[ ${convert_titlebar_text} == "yes" ]] && convertTitleBarText
     fi
-    
-    if [ "${convert_rounded}" == "yes" ]; then
-        convertRounded "to*photo"
-    fi
-    
-    if [ "${convert_small_border}" == "yes" ]; then
-        convertBorder "small"
-    fi
-    
-    if [ "${convert_shadow}" == "yes" ]; then
-        convertShadow
-    fi
-    
-    if [ "${convert_background_border}" == "yes" ]; then
-        convertBorder "background"
-    fi
-    
-    if [ "${convert_border_gradient}" == "yes" ]; then
-        convertBorderGradient "${interpolate_method}"
-    fi
-    
-    if [ "${convert_footer}" == "yes" ]; then
-        convertFooter
-    fi
-    
+    [ "${convert_rounded}" == "yes" ] && convertRounded "to*photo"
+    [ "${convert_small_border}" == "yes" ] && convertBorder "small"
+    [ "${convert_shadow}" == "yes" ] && convertShadow
+    [ "${convert_background_border}" == "yes" ] && convertBorder "background"
+    [ "${convert_border_gradient}" == "yes" ] && convertBorderGradient "${interpolate_method}"
+    [ "${convert_footer}" == "yes" ] && convertFooter
     notify
-    xclip -selection clipboard -i ${full_file_name} -t image/png
+    [ "${open_image}" == "yes" ] && eog "${full_file_name}" &
+    xclip -selection clipboard -i "${full_file_name}" -t image/png
+    setCursor on
 }
 
 runProgram() {
@@ -83,7 +57,6 @@ runProgram() {
     
     flameshot gui --raw > "${full_file_name}"
     run
-    setCursor on
 }
 
 manualRun() {
