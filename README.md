@@ -48,7 +48,7 @@ sudo apt install imagemagick flameshot dunst xclip bc make
 ### Packages
 
 ```bash
-pkg i -y termux-api imagemagick inotify-tools bc make
+pkg i -y termux-api imagemagick inotify-tools bc make ncurses-utils
 ```
 
 </details>
@@ -113,6 +113,12 @@ make uninstall
 - [Customizing Config File](https://github.com/Awesomesh0t/awesomeshot/wiki/Customizing-Config-File)
 
 ## Preview
+
+- Termux
+
+> In this video I'm using SSH from my laptop to remote Termux, so it can be use in my desktop terminal
+
+https://user-images.githubusercontent.com/64394320/196841144-907d873f-1168-4bcf-9f83-3a0b9571a9de.mp4
 
 - Arch Linux
 
