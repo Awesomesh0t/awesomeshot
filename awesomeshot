@@ -23,121 +23,94 @@ done
 file_name=""
 
 run() {
-  if [ "${convert_to_png}" == "yes" ]; then
-    convertToPng
-  fi
-
-  if [ "${backup}" == "yes" ]; then
-    # backupOriginalPhoto "${file_name}"
-    backupOriginalPhoto
-  fi
-    
-  if [ "${convert_titlebar}" == "yes" ]; then
-    convertTitleBar
-    if [ "${convert_titlebar_text}" == "yes" ]; then
-      convertTitleBarText
+    [ "${convert_to_png}" == "yes" ] && convertToPng
+    [ "${backup}" == "yes" ] && backupOriginalPhoto
+    if [ "${convert_titlebar}" == "yes" ]; then
+        convertTitleBar
+        [[ ${convert_titlebar_text} == "yes" ]] && convertTitleBarText
     fi
-  fi
-
-  if [ "${convert_rounded}" == "yes" ]; then
-    convertRounded "to*photo"
-  fi
-
-  if [ "${convert_small_border}" == "yes" ]; then
-    convertBorder "small"
-  fi
-
-  if [ "${convert_shadow}" == "yes" ]; then
-    convertShadow
-  fi
-
-  if [ "${convert_background_border}" == "yes" ]; then
-    convertBorder "background"
-  fi
-
-  if [ "${convert_border_gradient}" == "yes" ]; then
-    convertBorderGradient "${interpolate_method}"
-  fi
-
-  if [ "${convert_footer}" == "yes" ]; then
-    convertFooter
-  fi
-
-  termux-media-scan "${file_name}" &> /dev/null
-
-  notify
+    [ "${convert_rounded}" == "yes" ] && convertRounded "to*photo"
+    [ "${convert_small_border}" == "yes" ] && convertBorder "small"
+    [ "${convert_shadow}" == "yes" ] && convertShadow
+    [ "${convert_background_border}" == "yes" ] && convertBorder "background"
+    [ "${convert_border_gradient}" == "yes" ] && convertBorderGradient "${interpolate_method}"
+    [ "${convert_footer}" == "yes" ] && convertFooter
+    
+    termux-media-scan "${file_name}" &> /dev/null
+    
+    notify
 }
 
 autoRun() {
-  getUserConfig
-
-  echo -e "\n  ${COLOR_BACKGROUND_BLUE} INFO ${COLOR_RESET} Awesomeshot running on autorun, waiting to take screenshot."
-
-  echo -e "
+    getUserConfig
+    
+    echo -e "\n  ${COLOR_BACKGROUND_BLUE} INFO ${COLOR_RESET} Awesomeshot running on autorun, waiting to take screenshot."
+    
+    echo -e "
   ╭────────────────────────────╮
   │  ⚠ Press ${COLOR_BACKGROUND_RED} CTRL+C ${COLOR_RESET} to stop  │
   ╰────────────────────────────╯
-  "
-
-  inotifywait -m -e create ${screenshot_path} 2> /dev/null | \
+    "
+    
+    inotifywait -m -e create ${screenshot_path} 2> /dev/null | \
     while read get_file_name_result; do
-      get_file_name=$(echo -e "${get_file_name_result}" | awk '{print $3}')
-      if [[ "${screenshot_path}/${get_file_name}" != "${file_name}" || -z ${file_name} ]]; then
-
-        # Fix bug screenshot filename ".pending" 
-        if [ ${get_file_name%%-*} == ".pending" ]; then
-          file_name="${screenshot_path}/${get_file_name##*-}"
-        else
-          file_name="${screenshot_path}/${get_file_name}"
+        get_file_name=$(echo -e "${get_file_name_result}" | awk '{print $3}')
+        if [[ "${screenshot_path}/${get_file_name}" != "${file_name}" || -z ${file_name} ]]; then
+            
+            # Fix bug screenshot filename ".pending"
+            if [ ${get_file_name%%-*} == ".pending" ]; then
+                file_name="${screenshot_path}/${get_file_name##*-}"
+            else
+                file_name="${screenshot_path}/${get_file_name}"
+            fi
+            
+            sleep 1.5s
+            
+            run
+            
+            if [ "${open_image}" == "yes" ]; then
+                termux-open "${file_name}"
+            fi
+            
+            echo -e ""
         fi
-
-        sleep 1.5s
-
-        run
-
-        if [ "${open_image}" == "yes" ]; then
-          termux-open "${file_name}"
-        fi
-
-        echo -e ""
-      fi
     done
 }
 
 manualRun() {
-  getUserConfig
-
-  echo -e "\n  ${COLOR_BACKGROUND_BLUE} INFO ${COLOR_RESET} Awesomeshot running on manualrun"
-
-  echo -e "
+    getUserConfig
+    
+    echo -e "\n  ${COLOR_BACKGROUND_BLUE} INFO ${COLOR_RESET} Awesomeshot running on manualrun"
+    
+    echo -e "
   ╭────────────────────────────╮
   │  ⚠ Press ${COLOR_BACKGROUND_RED} CTRL+C ${COLOR_RESET} to stop  │
   ╰────────────────────────────╯
-  "
-
-  setTime start
-  log "Set*status*file"
-  if [[ -f ${file_name} ]]; then
-    setTime stop
-    getTime
-    check
-    run
-    setCursor on
-    [[ "${open_image}" == "yes" ]] && termux-open "${file_name}"
-  else
-    setTime stop
-    getTime
-    check
-    logError "\n\n  error" "file not found" "'${file_name}'" "please enter the correct path"
-    setCursor on
-  fi
-
+    "
+    
+    setTime start
+    log "Set*status*file"
+    if [[ -f ${file_name} ]]; then
+        setTime stop
+        getTime
+        check
+        run
+        setCursor on
+        [[ "${open_image}" == "yes" ]] && termux-open "${file_name}"
+    else
+        setTime stop
+        getTime
+        check
+        logError "\n\n  error" "file not found" "'${file_name}'" "please enter the correct path"
+        setCursor on
+    fi
+    
 }
 
 main() {
-  trap "handleInterruptByUser 'Interrupt By User'" 2
-  setCursor off
-  ${1} ${2}
+    trap "handleInterruptByUser 'Interrupt By User'" 2
+    setCursor off
+    ${1} ${2}
 }
 
 version() {
@@ -145,28 +118,28 @@ version() {
 }
 
 case "${1}" in
-  -a|--auto )
-    main autoRun
-  ;;
-  -c|--config )
-    generateDefaultConfig
-  ;;
-  -m|--manual )
-    if [ ${2} ]; then
-      file_name="${2}"
-      main manualRun
-    else
-      logError "error" "This option require filename"
-      exit 1
-    fi
-  ;;
-  -h|--help )
-    help
-  ;;
-  -v|--version )
-    version
-  ;;
-  *)
-    help
-  ;;
+    -a|--auto )
+        main autoRun
+    ;;
+    -c|--config )
+        generateDefaultConfig
+    ;;
+    -m|--manual )
+        if [ ${2} ]; then
+            file_name="${2}"
+            main manualRun
+        else
+            logError "error" "This option require filename"
+            exit 1
+        fi
+    ;;
+    -h|--help )
+        help
+    ;;
+    -v|--version )
+        version
+    ;;
+    *)
+        help
+    ;;
 esac
