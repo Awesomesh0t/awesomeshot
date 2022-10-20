@@ -171,7 +171,7 @@ https://user-images.githubusercontent.com/64394320/189495213-c102c789-bae9-439e-
 
 </details>
 
-## How awesomeshot work?
+## How awesomeshot work on Termux?
 
 - [How do i actually use this?](https://github.com/Awesomesh0t/awesomeshot/issues/2#issuecomment-1052047095)
 
